@@ -1,0 +1,174 @@
+---
+title: "Resumen_muertes"
+author: "Santiago Fernández Sáenz"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+Se descarga el DataFrame.
+
+```{r Descarga_df}
+library(readxl)
+Muertes_CR <- read_excel("C:/Users/mapis/OneDrive/Documents/Universidad/5 - Quinto semestre/Estadística actuarial I/Proyecto/Posibles datos/Muertes en Costa Rica 2014-2021.xlsx")
+
+head(Muertes_CR)
+```
+
+Se resumen las columnas.
+
+```{r Resumen}
+library(lattice)
+library(ggplot2)
+
+ggplot(Muertes_CR, aes(x = anotrab)) +
+    geom_histogram(binwidth = 1, fill = "blue", color = "black") +
+    labs(title = "Año de trabajo", x = "Año de trabajo", y = "Cantidad") +
+    theme_minimal()
+
+ggplot(Muertes_CR, aes(x = mestrab)) +
+  geom_bar(fill = "skyblue") +
+  labs(title = "Frecuencia de los meses", x = "Meses", y = "Frecuencia") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+print("Las nacionalidades son: ")
+print(length(unique(Muertes_CR$nacionalid)))
+
+ggplot(Muertes_CR, aes(x = sexo)) +
+  geom_bar(fill = "coral") +
+  labs(title = "Frecuencia de los sexos", x = "Sexos", y = "Frecuencia") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+ggplot(Muertes_CR, aes(x = estcivil)) +
+  geom_bar(fill = "purple") +
+  labs(title = "Frecuencia de los estados civiles", x = "Est. Civil", y = "Frecuencia") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+ggplot(Muertes_CR, aes(x = edads)) +
+    geom_histogram(binwidth = 1, fill = "bisque3", color = "black") +
+    labs(title = "Edades", x = "Edades", y = "Cantidad") +
+    theme_minimal()
+
+ggplot(Muertes_CR, aes(x = edadsrec)) +
+  geom_bar(fill = "green3") +
+  labs(title = "Frecuencia de los rangos etarios", x = "R. etarios", y = "Frecuencia") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+ggplot(Muertes_CR, aes(x = provincia)) +
+  geom_bar(fill = "cornflowerblue") +
+  labs(title = "Frecuencia de las provincias", x = "Provincias", y = "Frecuencia") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+print("Las provincias son: ")
+print(length(unique(Muertes_CR$pc)))
+
+ggplot(Muertes_CR, aes(x = IU)) +
+    geom_histogram(binwidth = 1, fill = "cyan", color = "black") +
+    labs(title = "IU", x = "IU", y = "Cantidad") +
+    theme_minimal()
+
+print("Las causas de muerte son: ")
+print(length(unique(Muertes_CR$causamuer)))
+
+print("Las causas de muerte son: ")
+print(length(unique(Muertes_CR$des_causa)))
+
+ggplot(Muertes_CR, aes(x = autopsia)) +
+  geom_bar(fill = "darkolivegreen") +
+  labs(title = "Frecuencia de autopsias", x = "Autopsias", y = "Frecuencia") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+ggplot(Muertes_CR, aes(x = asistmed)) +
+  geom_bar(fill = "darkolivegreen4") +
+  labs(title = "Frecuencia de asistencia medica", x = "Asistencia medica", y = "Frecuencia") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+print("Las instancias de muerte son: ")
+print(length(unique(Muertes_CR$instmurio)))
+
+ggplot(Muertes_CR, aes(x = provocu)) +
+  geom_bar(fill = "darkorchid") +
+  labs(title = "Frecuencia de provincia", x = "Provincia", y = "Frecuencia") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+print("Los cantones de muerte son: ")
+print(length(unique(Muertes_CR$pcocu)))
+
+ggplot(Muertes_CR, aes(x = diadef)) +
+    geom_histogram(binwidth = 1, fill = "deeppink2", color = "black") +
+    labs(title = "Dia de muerte", x = "Día", y = "Cantidad") +
+    theme_minimal()
+
+ggplot(Muertes_CR, aes(x = mesdef)) +
+  geom_bar(fill = "darkgreen") +
+  labs(title = "Mes de muerte", x = "Mes", y = "Frecuencia") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+ggplot(Muertes_CR, aes(x = anodef)) +
+    geom_histogram(binwidth = 1, fill = "deeppink3", color = "black") +
+    labs(title = "Año de muerte", x = "Año", y = "Cantidad") +
+    theme_minimal()
+
+ggplot(Muertes_CR, aes(x = ocuparec)) +
+  geom_bar(fill = "aquamarine2") +
+  labs(title = "Ocupación", x = "Ocupación", y = "Frecuencia") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+print("La nacionalidad de la madre es: ")
+print(length(unique(Muertes_CR$nacmadre)))
+
+ggplot(Muertes_CR, aes(x = provregis)) +
+  geom_bar(fill = "chocolate1") +
+  labs(title = "Provincia de residencia", x = "Provincia", y = "Frecuencia") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+print("El cantón de residencia es: ")
+print(length(unique(Muertes_CR$pcregis)))
+
+ggplot(Muertes_CR, aes(x = diadeclara)) +
+    geom_histogram(binwidth = 1, fill = "cornsilk2", color = "black") +
+    labs(title = "Día de declaración", x = "Día", y = "Cantidad") +
+    theme_minimal()
+
+ggplot(Muertes_CR, aes(x = mesdeclara)) +
+  geom_bar(fill = "deepskyblue2") +
+  labs(title = "Mes declaración", x = "Mes", y = "Frecuencia") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+ggplot(Muertes_CR, aes(x = anodeclara)) +
+    geom_histogram(binwidth = 1, fill = "chartreuse3", color = "black") +
+    labs(title = "Año de declaración", x = "Año", y = "Cantidad") +
+    theme_minimal()
+
+ggplot(Muertes_CR, aes(x = grgruposcb)) +
+    geom_histogram(binwidth = 1, fill = "darksalmon", color = "black") +
+    labs(title = "Grupo muerte", x = "Grupo muerte", y = "Cantidad") +
+    theme_minimal()
+
+print("El grupo de muerte es: ")
+print(length(unique(Muertes_CR$gruposcb)))
+
+ggplot(Muertes_CR, aes(x = reginec)) +
+  geom_bar(fill = "azure3") +
+  labs(title = "Región registrada Inec", x = "Región", y = "Frecuencia") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+ggplot(Muertes_CR, aes(x = regsalud)) +
+  geom_bar(fill = "azure3") +
+  labs(title = "Región registrada Ministerio de salud", x = "Región", y = "Frecuencia") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+```
+

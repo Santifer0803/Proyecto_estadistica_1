@@ -1,0 +1,76 @@
+---
+title: "muertes_limpiado"
+author: "Grupo 4"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+Se inicia descargando la base.
+
+```{r Descarga_base}
+library(readxl)
+Muertes_CR <- read_excel("C:/Users/mapis/OneDrive/Documents/Universidad/5 - Quinto semestre/Estadística actuarial I/Proyecto/Posibles datos/Muertes en Costa Rica 2014-2021.xlsx")
+```
+
+Se dejan las edades de 15 años o más.
+
+```{r Nuevas_edades}
+Muertes_CR <- Muertes_CR[Muertes_CR$edads >= 15, ]
+```
+
+Se remueven las observaciones de años anteriores a 2014, la base de datos tiene muy pocas.
+
+```{r Nuevos_annos}
+Muertes_CR <- Muertes_CR[Muertes_CR$anodef >= 2014, ]
+Muertes_CR <- Muertes_CR[Muertes_CR$anotrab >= 2014, ]
+Muertes_CR <- Muertes_CR[Muertes_CR$anotrab >= 2014, ]
+```
+
+
+Se creará un DataFrame con las muertes por cada 1000 habitantes, para esto se usará la división que realiza el Ministerio de salud. Iniciamos obteniendo las variables necesarias.
+
+```{r Muertes_habitantes}
+# Se obtienen las variables necesarias, iniciando por las regiones
+annos <- unique(Muertes_CR$anodef)
+
+# Las muertes por cada año
+lista_muertes <- list()
+
+for (i in 1:length(annos)) {
+  lista_muertes[[i]] <- nrow(Muertes_CR[Muertes_CR$anodef == annos[i], ])
+}
+
+lista_muertes <- unlist(lista_muertes)
+
+# Introducimos las poblaciones de cada año según el INEC, van ordenadas de 2014 a 2021
+poblacion <- c(4773130, 4832234, 4890379, 4947490, 5003402, 5058007, 5111238, 5163038)
+
+# Ahora realizamos las muertes por cada 1000 habitantes según el año
+muertes1000 <- list()
+
+for (i in 1:length(annos)) {
+  muertes1000[[i]] <- ((lista_muertes[i] / poblacion[i]) * 1000)
+}
+
+muertes1000 <- unlist(muertes1000)
+```
+
+Realizamos el DataFrame correspondiente.
+
+```{r Df_1000}
+df_1000 <- data.frame(annos_def = annos, muertes = muertes1000)
+df_1000
+```
+
+Fialmente representamos lo anterior con un gráfico.
+
+```{r Grafico}
+library(ggplot2)
+
+ggplot(data = df_1000, aes(x = annos_def, y = muertes)) +
+  geom_line(color = "chartreuse3") +
+  geom_point(color = "chartreuse4", size = 3) +
+  labs(title = "Tasa de Muerte por cada 1000 habitantes según el Año", x = "Año", y = "Tasa de Muerte") +
+  theme_minimal()
+```
+
