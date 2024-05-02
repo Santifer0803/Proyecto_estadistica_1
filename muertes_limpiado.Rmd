@@ -5,6 +5,10 @@ date: "`r Sys.Date()`"
 output: html_document
 ---
 
+# Bitácora 2
+
+## Limpieza de la base
+
 Se inicia descargando la base.
 
 ```{r Descarga_base}
@@ -26,8 +30,228 @@ Muertes_CR <- Muertes_CR[Muertes_CR$anotrab >= 2014, ]
 Muertes_CR <- Muertes_CR[Muertes_CR$anotrab >= 2014, ]
 ```
 
+Se procede a corregir los errores ortográficos de las principales variables.
 
-Se creará un DataFrame con las muertes por cada 1000 habitantes, para esto se usará la división que realiza el Ministerio de salud. Iniciamos obteniendo las variables necesarias.
+```{r Ortografia}
+# Se podrá todo sin tílde, para evitar errores al correr el programa
+Muertes_CR$estcivil <- gsub("Ã³", "o", Muertes_CR$estcivil)
+Muertes_CR$ocuparec <- gsub("Ã¡", "a", Muertes_CR$ocuparec)
+Muertes_CR$ocuparec <- gsub("Ã©", "e", Muertes_CR$ocuparec)
+Muertes_CR$ocuparec <- gsub("Ã", "i", Muertes_CR$ocuparec)
+Muertes_CR$regsalud <- gsub("Ã", "i", Muertes_CR$regsalud)
+Muertes_CR$regsalud <- gsub("i³", "o", Muertes_CR$regsalud)
+Muertes_CR$provincia <- gsub("Ã©", "e", Muertes_CR$provincia)
+Muertes_CR$provincia <- gsub("Ã³", "o", Muertes_CR$provincia)
+Muertes_CR$provocu <- gsub("Ã©", "e", Muertes_CR$provocu)
+Muertes_CR$provocu <- gsub("Ã³", "o", Muertes_CR$provocu)
+Muertes_CR$provregis <- gsub("Ã©", "e", Muertes_CR$provregis)
+Muertes_CR$provregis <- gsub("Ã³", "o", Muertes_CR$provregis)
+Muertes_CR$reginec <- gsub("Ã", "i", Muertes_CR$reginec)
+Muertes_CR$reginec <- gsub("i³", "o", Muertes_CR$reginec)
+Muertes_CR$edadsrec <- gsub("100 y mÃ¡s", "100 - 121", Muertes_CR$edadsrec)
+Muertes_CR$autopsia <- gsub("Ã©", "e", Muertes_CR$autopsia)
+Muertes_CR$autopsia <- gsub("Ã", "i", Muertes_CR$autopsia)
+Muertes_CR$asistmed <- gsub("Ã©", "e", Muertes_CR$asistmed)
+Muertes_CR$asistmed <- gsub("Ã", "i", Muertes_CR$asistmed)
+Muertes_CR$reginec <- gsub("Paci­fico", "Pacifico", Muertes_CR$reginec)
+Muertes_CR$regsalud <- gsub("Paci­fico", "Pacifico", Muertes_CR$regsalud)
+```
+
+Hay muchas nacionalidades en la base de datos, pero la mayoría son de Costa Rica, por lo que se juntará a las demás en un grupo llamado extranjeros.
+
+```{r Nacionalidades}
+# Acá se ve que hay muchas nacionalidades
+(length(unique(Muertes_CR$nacionalid)))
+
+# Se cambian todas las nacionalidades distintas de Costa Rica
+Muertes_CR$nacionalid <- gsub("^(?!Costa Rica$).*", "Extrenjero", Muertes_CR$nacionalid, perl = TRUE)
+```
+Debido a la baja cantidad de observaciones, en el estado civil se hará un grupo llamado "otros" para los que están en estado civil: ignorado, unión libre, menor y separado.
+
+```{r Estado_civ}
+Muertes_CR$estcivil <- gsub("Ignorado", "Otros", Muertes_CR$estcivil)
+Muertes_CR$estcivil <- gsub("Union libre", "Otros", Muertes_CR$estcivil)
+Muertes_CR$estcivil <- gsub("Separado", "Otros", Muertes_CR$estcivil)
+Muertes_CR$estcivil <- gsub("Menor", "Otros", Muertes_CR$estcivil)
+```
+
+Nuevamente, por la baja cantidad de observaciones en algunas ocupaciones, se juntarán algunos grupos, en este caso se harán 2 grupos llamados "Trabajadores activos" y "Otros" que contienen a las siguientes ocupaciones:
+
+Trabajadores activos: "Profesionales cientificos e intelectuales", "Agricultores y trabajadores calificados agropecuarios, forestales y pesqueros", "Ocupaciones elementales", "Trabajadores de los servicios y vendedores de comercios y mercados", "Operadores de instalaciones y maquinas y ensambladores", "Tecnicos y profesionales de nivel medio", "Oficiales, operarios y artesanos de artes mecanicas y de otros oficios", "Personal de apoyo administrativo" y "Directores y gerentes".
+
+Otros: "Pensionado", "Persona con discapacidad", "Estudiante", "Mal especificadas" y "Privado de libertad"
+
+```{r Ocupacion}
+# Grupo de Trabajadores activos
+Muertes_CR$ocuparec <- gsub("Profesionales cienti­ficos e intelectuales", "Trabajadores activos", Muertes_CR$ocuparec)
+Muertes_CR$ocuparec <- gsub("Agricultores y trabajadores calificados agropecuarios, forestales y pesqueros", "Trabajadores activos", Muertes_CR$ocuparec)
+Muertes_CR$ocuparec <- gsub("Ocupaciones elementales", "Trabajadores activos", Muertes_CR$ocuparec)
+Muertes_CR$ocuparec <- gsub("Trabajadores de los servicios y vendedores de comercios y mercados", "Trabajadores activos", Muertes_CR$ocuparec)
+Muertes_CR$ocuparec <- gsub("Operadores de instalaciones y maquinas y ensambladores", "Trabajadores activos", Muertes_CR$ocuparec)
+Muertes_CR$ocuparec <- gsub("Tecnicos y profesionales de nivel medio", "Trabajadores activos", Muertes_CR$ocuparec)
+Muertes_CR$ocuparec <- gsub("Oficiales, operarios y artesanos de artes mecanicas y de otros oficios", "Trabajadores activos", Muertes_CR$ocuparec)
+Muertes_CR$ocuparec <- gsub("Personal de apoyo administrativo", "Trabajadores activos", Muertes_CR$ocuparec)
+Muertes_CR$ocuparec <- gsub("Directores y gerentes", "Trabajadores activos", Muertes_CR$ocuparec)
+
+# Grupo de otros
+Muertes_CR$ocuparec <- gsub("Pensionado", "Otros", Muertes_CR$ocuparec)
+Muertes_CR$ocuparec <- gsub("Persona con discapacidad", "Otros", Muertes_CR$ocuparec)
+Muertes_CR$ocuparec <- gsub("Estudiante", "Otros", Muertes_CR$ocuparec)
+Muertes_CR$ocuparec <- gsub("Mal especificadas", "Otros", Muertes_CR$ocuparec)
+Muertes_CR$ocuparec <- gsub("Privado de libertad", "Otros", Muertes_CR$ocuparec)
+```
+
+
+## Análisis descriptivo
+
+### Visualización de variables únicas
+
+Para que el gráfico de los rangos etarios salga en orden, es necesario definir el orden antes.
+
+```{r Orden_rangos}
+Muertes_CR$edadsrec <- factor(Muertes_CR$edadsrec, levels = c("15 - 19", "20 - 24", "25 - 29", "30 - 34", "35 - 39", "40 - 44", "45 - 49", "50 - 54", "55 - 59", "60 - 64", "65 - 69", "70 - 74", "75 - 79", "80 - 84", "85 - 89", "90 - 94", "95 - 99", "100 - 121"))
+```
+
+
+Se resumiran algunas de las variables de la base de datos con visualizaciones.
+
+```{r Visualizaciones}
+library(ggplot2)
+
+ggplot(Muertes_CR, aes(x = anotrab)) +
+    geom_histogram(binwidth = 1, fill = "blue", color = "black") +
+    labs(title = "Año de trabajo", x = "Año de trabajo", y = "Cantidad") +
+    theme_minimal()
+
+ggplot(Muertes_CR, aes(x = mestrab)) +
+  geom_bar(fill = "skyblue") +
+  labs(title = "Frecuencia de los meses", x = "Meses", y = "Frecuencia") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+ggplot(Muertes_CR, aes(x = nacionalid)) +
+  geom_bar(fill = "darkgoldenrod2") +
+  labs(title = "Frecuencia de las nacionalidades", x = "Nacionalidad", y = "Frecuencia") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+ggplot(Muertes_CR, aes(x = sexo)) +
+  geom_bar(fill = "coral") +
+  labs(title = "Frecuencia de los sexos", x = "Sexos", y = "Frecuencia") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+ggplot(Muertes_CR, aes(x = estcivil)) +
+  geom_bar(fill = "purple") +
+  labs(title = "Frecuencia de los estados civiles", x = "Est. Civil", y = "Frecuencia") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+ggplot(Muertes_CR, aes(x = edads)) +
+    geom_histogram(binwidth = 1, fill = "bisque3", color = "black") +
+    labs(title = "Edades", x = "Edades", y = "Cantidad") +
+    theme_minimal()
+
+ggplot(Muertes_CR, aes(x = edadsrec)) +
+  geom_bar(fill = "green3") +
+  labs(title = "Frecuencia de los rangos etarios", x = "R. etarios", y = "Frecuencia") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+ggplot(Muertes_CR, aes(x = provincia)) +
+  geom_bar(fill = "cornflowerblue") +
+  labs(title = "Frecuencia de las provincias", x = "Provincias", y = "Frecuencia") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+ggplot(Muertes_CR, aes(x = IU)) +
+    geom_histogram(binwidth = 1, fill = "cyan", color = "black") +
+    labs(title = "IU", x = "IU", y = "Cantidad") +
+    theme_minimal()
+
+ggplot(Muertes_CR, aes(x = autopsia)) +
+  geom_bar(fill = "darkolivegreen") +
+  labs(title = "Frecuencia de autopsias", x = "Autopsias", y = "Frecuencia") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+ggplot(Muertes_CR, aes(x = asistmed)) +
+  geom_bar(fill = "darkolivegreen4") +
+  labs(title = "Frecuencia de asistencia medica", x = "Asistencia medica", y = "Frecuencia") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+ggplot(Muertes_CR, aes(x = provocu)) +
+  geom_bar(fill = "darkorchid") +
+  labs(title = "Frecuencia de provincia", x = "Provincia", y = "Frecuencia") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+ggplot(Muertes_CR, aes(x = diadef)) +
+    geom_histogram(binwidth = 1, fill = "deeppink2", color = "black") +
+    labs(title = "Dia de muerte", x = "Día", y = "Cantidad") +
+    theme_minimal()
+
+ggplot(Muertes_CR, aes(x = mesdef)) +
+  geom_bar(fill = "darkgreen") +
+  labs(title = "Mes de muerte", x = "Mes", y = "Frecuencia") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+ggplot(Muertes_CR, aes(x = anodef)) +
+    geom_histogram(binwidth = 1, fill = "deeppink3", color = "black") +
+    labs(title = "Año de muerte", x = "Año", y = "Cantidad") +
+    theme_minimal()
+
+ggplot(Muertes_CR, aes(x = ocuparec)) +
+  geom_bar(fill = "aquamarine2") +
+  labs(title = "Ocupación", x = "Ocupación", y = "Frecuencia") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+ggplot(Muertes_CR, aes(x = provregis)) +
+  geom_bar(fill = "chocolate1") +
+  labs(title = "Provincia de residencia", x = "Provincia", y = "Frecuencia") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+ggplot(Muertes_CR, aes(x = diadeclara)) +
+    geom_histogram(binwidth = 1, fill = "cornsilk2", color = "black") +
+    labs(title = "Día de declaración", x = "Día", y = "Cantidad") +
+    theme_minimal()
+
+ggplot(Muertes_CR, aes(x = mesdeclara)) +
+  geom_bar(fill = "deepskyblue2") +
+  labs(title = "Mes declaración", x = "Mes", y = "Frecuencia") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+ggplot(Muertes_CR, aes(x = anodeclara)) +
+    geom_histogram(binwidth = 1, fill = "chartreuse3", color = "black") +
+    labs(title = "Año de declaración", x = "Año", y = "Cantidad") +
+    theme_minimal()
+
+ggplot(Muertes_CR, aes(x = grgruposcb)) +
+    geom_histogram(binwidth = 1, fill = "darksalmon", color = "black") +
+    labs(title = "Grupo muerte", x = "Grupo muerte", y = "Cantidad") +
+    theme_minimal()
+
+ggplot(Muertes_CR, aes(x = reginec)) +
+  geom_bar(fill = "azure3") +
+  labs(title = "Región registrada Inec", x = "Región", y = "Frecuencia") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+ggplot(Muertes_CR, aes(x = regsalud)) +
+  geom_bar(fill = "azure3") +
+  labs(title = "Región registrada Ministerio de salud", x = "Región", y = "Frecuencia") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+```
+
+### Visualizaciones adicionales
+
+Se creará un DataFrame con las muertes por cada 1000 habitantes, para esto se usará la división de regiones que realiza el Ministerio de salud. Iniciamos obteniendo las variables necesarias.
 
 ```{r Muertes_habitantes}
 # Se obtienen las variables necesarias, iniciando por las regiones
@@ -72,5 +296,38 @@ ggplot(data = df_1000, aes(x = annos_def, y = muertes)) +
   geom_point(color = "chartreuse4", size = 3) +
   labs(title = "Tasa de Muerte por cada 1000 habitantes según el Año", x = "Año", y = "Tasa de Muerte") +
   theme_minimal()
+```
+
+Para una mejor visualización, se procede a hacer un mapa de calor de Costa Rica con las muertes del DataFrame. Inicialmente, ocupamos las regiones con su respectiva cantidad de muertes.
+
+```{r Muertes_region}
+# Se usará el comando table para ver la cantidad de muertes por región
+#table(factor(Muertes_CR$regsalud))
+
+# Se creará el DataFrame
+#muertes_region <- data.frame(region = c("Brunca", "Central Este", "Central Norte", "Central Occidente", "Central sur", "Chorotega", "Huetar Caribe", "Huetar Norte", "Pacifico Central"), muertes = c(12761, 20654, 34901, 8100, 59922, 17095, 14829, 6865, 11089))
+
+# DataFrame con los coordenadas por region
+
+#regiones_geo <- data.frame(region = c("Brunca", "Central Este", "Central Norte", "Central Occidente", "Central sur", "Chorotega", "Huetar Caribe", "Huetar Norte", "Pacifico Central"), long = c(8.96734, 9.84362, 10.04354, 10.09929, 9.91080, 10.52445, 10.10344, 10.67941, 9.62632), lat = c(-83.45636, -83.86837, -84.16075, -84.37727, -84.09852, -85.25473, -83.50854, -84.82720, -84.62799))
+```
+
+Ahora, se realiza el mapa de calor.
+
+```{r Mapa_calor}
+# Unimos las muertes con los datos geoespaciales
+#datos_mapa <- merge(regiones_geo, muertes_region, by = "region")
+
+# Cargamos los datos geoespaciales de Costa Rica
+#costa_rica <- map_data("world", region = "Costa Rica")
+
+# Hacemos el mapa de calor
+#ggplot() +
+  #geom_polygon(data = costa_rica, aes(x = long, y = lat, group = group), fill = "lightgrey", color = "black") +
+  #geom_tile(data = datos_mapa, aes(x = long, y = lat, fill = muertes), alpha = 0.8) +
+  #scale_fill_gradient(low = "yellow2", high = "red2", na.value = NA, limits = c(0, max(datos_mapa$muertes))) +
+  #labs(title = "Mapa de calor de muertes en Costa Rica", fill = "Muertes") +
+  #theme_minimal() +
+  #coord_fixed(xlim = c(-86, -82.5), ylim = c(8, 11.5))
 ```
 
