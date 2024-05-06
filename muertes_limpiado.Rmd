@@ -13,7 +13,7 @@ Se inicia descargando la base.
 
 ```{r Descarga_base}
 library(readxl)
-Muertes_CR <- read_excel("C:/Users/mapis/OneDrive/Documents/Universidad/5 - Quinto semestre/Estadística actuarial I/Proyecto/Posibles datos/Muertes en Costa Rica 2014-2021.xlsx")
+Muertes_CR <- read_excel("C:/Users/em415/Downloads/Proyecto Estadística/Base de datos/Costa Rica Total de Fallecimientos 2014 - 2021 (xlsx).xlsx")
 ```
 
 Se dejan las edades de 15 años o más.
@@ -27,7 +27,7 @@ Se remueven las observaciones de años anteriores a 2014, la base de datos tiene
 ```{r Nuevos_annos}
 Muertes_CR <- Muertes_CR[Muertes_CR$anodef >= 2014, ]
 Muertes_CR <- Muertes_CR[Muertes_CR$anotrab >= 2014, ]
-Muertes_CR <- Muertes_CR[Muertes_CR$anotrab >= 2014, ]
+Muertes_CR <- Muertes_CR[Muertes_CR$anodeclara >= 2014, ]
 ```
 
 Se procede a corregir los errores ortográficos de las principales variables.
@@ -64,7 +64,7 @@ Hay muchas nacionalidades en la base de datos, pero la mayoría son de Costa Ric
 (length(unique(Muertes_CR$nacionalid)))
 
 # Se cambian todas las nacionalidades distintas de Costa Rica
-Muertes_CR$nacionalid <- gsub("^(?!Costa Rica$).*", "Extrenjero", Muertes_CR$nacionalid, perl = TRUE)
+Muertes_CR$nacionalid <- gsub("^(?!Costa Rica$).*", "Extranjero", Muertes_CR$nacionalid, perl = TRUE)
 ```
 Debido a la baja cantidad de observaciones, en el estado civil se hará un grupo llamado "otros" para los que están en estado civil: ignorado, unión libre, menor y separado.
 
@@ -83,7 +83,7 @@ Otros: "Pensionado", "Persona con discapacidad", "Estudiante", "Mal especificada
 
 ```{r Ocupacion}
 # Grupo de Trabajadores activos
-Muertes_CR$ocuparec <- gsub("Profesionales cienti­ficos e intelectuales", "Trabajadores activos", Muertes_CR$ocuparec)
+Muertes_CR$ocuparec <- gsub("Profesionales cientificos e intelectuales", "Trabajadores activos", Muertes_CR$ocuparec)
 Muertes_CR$ocuparec <- gsub("Agricultores y trabajadores calificados agropecuarios, forestales y pesqueros", "Trabajadores activos", Muertes_CR$ocuparec)
 Muertes_CR$ocuparec <- gsub("Ocupaciones elementales", "Trabajadores activos", Muertes_CR$ocuparec)
 Muertes_CR$ocuparec <- gsub("Trabajadores de los servicios y vendedores de comercios y mercados", "Trabajadores activos", Muertes_CR$ocuparec)
@@ -113,9 +113,9 @@ Muertes_CR$edadsrec <- factor(Muertes_CR$edadsrec, levels = c("15 - 19", "20 - 2
 ```
 
 
-Se resumiran algunas de las variables de la base de datos con visualizaciones.
+Se resumirán algunas de las variables de la base de datos con visualizaciones.
 
-```{r Visualizaciones}
+```{r Visualizaciones_descriptivas}
 library(ggplot2)
 
 ggplot(Muertes_CR, aes(x = anotrab)) +
@@ -330,4 +330,183 @@ Ahora, se realiza el mapa de calor.
   #theme_minimal() +
   #coord_fixed(xlim = c(-86, -82.5), ylim = c(8, 11.5))
 ```
+
+## Gráficos de covarianza
+
+### Relaciones entre los grupos de la causa de muerte y las demás variables importantes
+
+Primero se realizan gráficos de frecuencia poligonal para visualizar la covarianza entre la variable principal, grupos de muerte, y las demás variables importantes
+
+```{r Visualizaciones_covarianza_frecuencia}
+
+library(ggplot2)
+
+categorias <- length(unique(Muertes_CR$nacionalid))
+
+colores_aleatorios <- rainbow(categorias)
+
+ggplot(Muertes_CR, aes(x = grgruposcb)) + 
+  geom_freqpoly(aes(color = nacionalid), binwidth = 500, linewidth = 1.2) +
+  labs(x = "Grupos de causa de muerte", y = "Nacionalidad", color = "Nacionalidades") +
+  scale_color_manual(values = colores_aleatorios)
+
+categorias <- length(unique(Muertes_CR$sexo))
+
+colores_aleatorios <- rainbow(categorias)
+
+ggplot(Muertes_CR, aes(x = grgruposcb)) + 
+  geom_freqpoly(aes(color = sexo), binwidth = 500, linewidth = 1.2) +
+  labs(x = "Grupos de causa de muerte", y = "Sexo", color = "Sexos") +
+  scale_color_manual(values = colores_aleatorios)
+
+categorias <- length(unique(Muertes_CR$estcivil))
+
+colores_aleatorios <- rainbow(categorias)
+
+ggplot(Muertes_CR, aes(x = grgruposcb)) + 
+  geom_freqpoly(aes(color = estcivil), binwidth = 500, linewidth = 1.2) +
+  labs(x = "Grupos de causa de muerte", y = "Estado civil", color = "Estados civiles") +
+  scale_color_manual(values = colores_aleatorios)
+
+categorias <- length(unique(Muertes_CR$ocuparec))
+
+colores_aleatorios <- rainbow(categorias)
+
+ggplot(Muertes_CR, aes(x = grgruposcb)) + 
+  geom_freqpoly(aes(color = ocuparec), binwidth = 500, linewidth = 1.2) +
+  labs(x = "Grupos de causa de muerte", y = "Ocupación", color = "Ocupaciones") +
+  scale_color_manual(values = colores_aleatorios)
+
+categorias <- length(unique(Muertes_CR$regsalud))
+
+colores_aleatorios <- rainbow(categorias)
+
+ggplot(Muertes_CR, aes(x = grgruposcb)) + 
+  geom_freqpoly(aes(color = regsalud), binwidth = 500, linewidth = 1.2) +
+  labs(x = "Grupos de causa de muerte", y = "Región del Ministerio de Salud", color = "Regiones del Ministerio de Salud") +
+  scale_color_manual(values = colores_aleatorios)
+
+```
+
+Ahora se realizan gráficos de frecuencia poligonal por medio de la densidad para visualizar mejor las covarianzas y relaciones antes descritas 
+
+```{r Visualizaciones_covarianza_densidad}
+
+library(ggplot2)
+
+categorias <- length(unique(Muertes_CR$nacionalid))
+
+colores_aleatorios <- rainbow(categorias)
+
+ggplot(Muertes_CR, aes(x = grgruposcb, y = after_stat(density))) + 
+  geom_density(aes(color = nacionalid), linewidth = 1.2) +
+  labs(title = "Covarianza entre los grupos de causa de muerte y las nacionalidades", x = "Grupos de causa de muerte", y = "Densidad", color = "Nacionalidades") +
+  scale_color_manual(values = colores_aleatorios)
+
+ggplot(Muertes_CR, aes(x = grgruposcb, y = after_stat(density))) + 
+  geom_freqpoly(aes(color = nacionalid), binwidth = 500, linewidth = 1.2) +
+  labs(title = "Covarianza entre los grupos de causa de muerte y las nacionalidades", x = "Grupos de causa de muerte", y = "Densidad", color = "Nacionalidades") +
+  scale_color_manual(values = colores_aleatorios)
+```
+
+Ahora se realizan gráficos de caja y bigotes para una mejor visualización de la covarianza entre los grupos de muerte y las demás variables importantes
+
+```{r Visualizaciones_covarianza_boxplot}
+
+library(ggplot2)
+
+library(forcats)
+
+ggplot(Muertes_CR, aes(x = fct_reorder(nacionalid, grgruposcb, median), y = grgruposcb)) +
+  geom_boxplot() +
+  labs(x = "Nacionalidades", y = "Grupos de causa de muerte")
+
+ggplot(Muertes_CR, aes(x = fct_reorder(sexo, grgruposcb, median), y = grgruposcb)) +
+  geom_boxplot() +
+  labs(x = "Sexos", y = "Grupos de causa de muerte")
+
+ggplot(Muertes_CR, aes(x = fct_reorder(estcivil, grgruposcb, median), y = grgruposcb)) +
+  geom_boxplot() +
+  labs(x = "Estados civiles", y = "Grupos de causa de muerte")
+
+ggplot(Muertes_CR, aes(x = fct_reorder(ocuparec, grgruposcb, median), y = grgruposcb)) +
+  geom_boxplot() +
+  labs(x = "Ocupaciones", y = "Grupos de causa de muerte")
+
+ggplot(Muertes_CR, aes(x =  grgruposcb, y = fct_reorder(regsalud, grgruposcb, median))) +
+  geom_boxplot() +
+  labs(x = "Grupos de causa de muerte", y = "Regiones del Ministerio de Salud") + 
+  theme(plot.title = element_text(hjust = 1.4))
+
+```
+
+### Relaciones entre diferentes variables importantes
+
+Ahora se realizarán gráficos de covarianza entre algunas de las variables importantes, excluyendo el grupo de causa de muerte, para visualizar si hay alguna relación entre ellas
+
+```{r Visualizaciones_adicionales}
+
+library(ggplot2)
+
+ggplot(Muertes_CR, aes(x = nacionalid, y = regsalud)) +
+  geom_count() +
+  labs(x ="Nacionalidades", y = "Regiones del Ministerio de Salud")
+
+ggplot(Muertes_CR, aes(x = sexo, y = estcivil)) +
+  geom_count() +
+  labs(x ="Sexos", y = "Estados civiles")
+
+ggplot(Muertes_CR, aes(x = sexo, y = ocuparec)) +
+  geom_count() + 
+  labs(x ="Sexos", y = "Ocupaciones")
+
+ggplot(Muertes_CR, aes(x = estcivil, y = ocuparec)) +
+  geom_count() +
+  labs(x ="Estados civiles", y = "Ocupaciones")
+
+```
+
+```{r waring = FALSE}
+
+library(dplyr)
+
+Muertes_CR |> 
+  count(nacionalid, regsalud) |>  
+  ggplot(aes(x = nacionalid, y = regsalud)) +
+  geom_tile(aes(fill = n)) +
+  labs(x ="Nacionalidades", y = "Regiones del Ministerio de Salud")
+
+Muertes_CR |> 
+  count(sexo, estcivil) |>  
+  ggplot(aes(x = sexo, y = estcivil)) +
+  geom_tile(aes(fill = n)) +
+  labs(x ="Sexos", y = "Estados Civiles")
+
+Muertes_CR |> 
+  count(sexo, ocuparec) |>  
+  ggplot(aes(x = sexo, y = ocuparec)) +
+  geom_tile(aes(fill = n)) +
+  labs(x ="Sexos", y = "Ocupaciones")
+
+Muertes_CR |> 
+  count(estcivil, ocuparec) |>  
+  ggplot(aes(x = estcivil, y = ocuparec)) +
+  geom_tile(aes(fill = n)) +
+  labs(x ="Estados civiles", y = "Ocupaciones")
+
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
