@@ -13,7 +13,7 @@ Se inicia descargando la base.
 
 ```{r Descarga_base}
 library(readxl)
-Muertes_CR <- read_excel("C:/Users/em415/Downloads/Proyecto Estadística/Base de datos/Costa Rica Total de Fallecimientos 2014 - 2021 (xlsx).xlsx")
+Muertes_CR <- read_excel("datos/muertes_en_costa_rica_2014_2021.xlsx")
 ```
 
 Se dejan las edades de 15 años o más.
