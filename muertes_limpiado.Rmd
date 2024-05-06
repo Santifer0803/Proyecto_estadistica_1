@@ -83,7 +83,7 @@ Otros: "Pensionado", "Persona con discapacidad", "Estudiante", "Mal especificada
 
 ```{r Ocupacion}
 # Grupo de Trabajadores activos
-Muertes_CR$ocuparec <- gsub("Profesionales cientificos e intelectuales", "Trabajadores activos", Muertes_CR$ocuparec)
+Muertes_CR$ocuparec <- gsub("Profesionales cienti­ficos e intelectuales", "Trabajadores activos", Muertes_CR$ocuparec)
 Muertes_CR$ocuparec <- gsub("Agricultores y trabajadores calificados agropecuarios, forestales y pesqueros", "Trabajadores activos", Muertes_CR$ocuparec)
 Muertes_CR$ocuparec <- gsub("Ocupaciones elementales", "Trabajadores activos", Muertes_CR$ocuparec)
 Muertes_CR$ocuparec <- gsub("Trabajadores de los servicios y vendedores de comercios y mercados", "Trabajadores activos", Muertes_CR$ocuparec)
@@ -439,9 +439,9 @@ ggplot(Muertes_CR, aes(x = fct_reorder(estcivil, grgruposcb, median), y = grgrup
   labs(x = "Estados civiles", y = "Grupos de causa de muerte") +
   theme_minimal()
 
-ggplot(Muertes_CR, aes(x = fct_reorder(ocuparec, grgruposcb, median), y = grgruposcb)) +
+ggplot(Muertes_CR, aes(x = grgruposcb, y = fct_reorder(ocuparec, grgruposcb, median))) +
   geom_boxplot() +
-  labs(x = "Ocupaciones", y = "Grupos de causa de muerte") +
+  labs(x = "Grupos de causa de muerte", y = "Ocupaciones") +
   theme_minimal()
 
 ggplot(Muertes_CR, aes(x =  grgruposcb, y = fct_reorder(regsalud, grgruposcb, median))) +
