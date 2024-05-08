@@ -105,7 +105,6 @@ Muertes_CR$ocuparec <- gsub("Mal especificadas", "Otros", Muertes_CR$ocuparec)
 Muertes_CR$ocuparec <- gsub("Privado de libertad", "Otros", Muertes_CR$ocuparec)
 ```
 
-
 ## Análisis descriptivo
 
 ### Visualización de variables únicas
@@ -336,65 +335,11 @@ Ahora se realiza el mapa de calor
   #coord_fixed(xlim = c(-86, -82.5), ylim = c(8, 11.5))
 ```
 
-## Gráficos de covarianza
+## Gráficos de covarianza y correlación
 
 ### Relaciones entre los grupos de causa de muerte y las demás variables importantes
 
-```{r}
-
-a = ' categorias <- length(unique(Muertes_CR$nacionalid))
-
-colores_aleatorios <- rainbow(categorias)
-
-ggplot(Muertes_CR, aes(x = grgruposcb)) + 
-  geom_freqpoly(aes(color = nacionalid), binwidth = 1, linewidth = 1.2) +
-  labs(x = "Grupos de causa de muerte", y = "Nacionalidad", color = "Nacionalidades") +
-  scale_color_manual(values = colores_aleatorios) +
-  theme_minimal()
-
-categorias <- length(unique(Muertes_CR$sexo))
-
-colores_aleatorios <- rainbow(categorias)
-
-ggplot(Muertes_CR, aes(x = grgruposcb)) + 
-  geom_freqpoly(aes(color = sexo), binwidth = 1, linewidth = 1.2) +
-  labs(x = "Grupos de causa de muerte", y = "Sexo", color = "Sexos") +
-  scale_color_manual(values = colores_aleatorios) +
-  theme_minimal()
-
-categorias <- length(unique(Muertes_CR$estcivil))
-
-colores_aleatorios <- rainbow(categorias)
-
-ggplot(Muertes_CR, aes(x = grgruposcb)) + 
-  geom_freqpoly(aes(color = estcivil), binwidth = 1, linewidth = 1.2) +
-  labs(x = "Grupos de causa de muerte", y = "Estado civil", color = "Estados civiles") +
-  scale_color_manual(values = colores_aleatorios) +
-  theme_minimal()
-
-categorias <- length(unique(Muertes_CR$ocuparec))
-
-colores_aleatorios <- rainbow(categorias)
-
-ggplot(Muertes_CR, aes(x = grgruposcb)) + 
-  geom_freqpoly(aes(color = ocuparec), binwidth = 1, linewidth = 1.2) +
-  labs(x = "Grupos de causa de muerte", y = "Ocupación", color = "Ocupaciones") +
-  scale_color_manual(values = colores_aleatorios) +
-  theme_minimal()
-
-categorias <- length(unique(Muertes_CR$regsalud))
-
-colores_aleatorios <- rainbow(categorias)
-
-ggplot(Muertes_CR, aes(x = grgruposcb)) + 
-  geom_freqpoly(aes(color = regsalud), binwidth = 1, linewidth = 1.2) +
-  labs(x = "Grupos de causa de muerte", y = "Región del Ministerio de Salud", color = "Regiones del Ministerio de Salud") +
-  scale_color_manual(values = colores_aleatorios) +
-  theme_minimal() '
-
-```
-
-Primero se realizan histogramas relacionando los grupos de causa de muerte (eje x) y la cantidad de observaciones (eje y) de las diferentes subcategorías de las variables importantes
+Primero se realizan histogramas relacionando los grupos de causa de muerte (eje x) y la densidad (eje y) de las diferentes subcategorías de las variables importantes
 
 ```{r Relaciones_histogramas}
 
@@ -407,7 +352,7 @@ categorias <- length(unique(Muertes_CR$nacionalid))
 colores_aleatorios <- rainbow(categorias)
 
 ggplot(Muertes_CR, aes(x = grgruposcb, y = after_stat(density), fill = nacionalid)) +
-  geom_histogram(position = "dodge", size = 0.5, color = "black") +
+  geom_histogram(position = "dodge", binwidth = 1, bins = 18, size = 0.5, color = "black") +
   facet_wrap(~nacionalid) +
   cowplot::theme_cowplot() +
   theme(legend.position = "none") +
@@ -419,7 +364,7 @@ categorias <- length(unique(Muertes_CR$sexo))
 colores_aleatorios <- rainbow(categorias)
 
 ggplot(Muertes_CR, aes(x = grgruposcb, y = after_stat(density), fill = sexo)) +
-  geom_histogram(position = "dodge", size = 0.5, color = "black") +
+  geom_histogram(position = "dodge", binwidth = 1, bins = 18, size = 0.5, color = "black") +
   facet_wrap(~sexo) +
   cowplot::theme_cowplot() +
   theme(legend.position = "none") +
@@ -431,7 +376,7 @@ categorias <- length(unique(Muertes_CR$estcivil))
 colores_aleatorios <- rainbow(categorias)
 
 ggplot(Muertes_CR, aes(x = grgruposcb, y = after_stat(density), fill = estcivil)) +
-  geom_histogram(position = "dodge", size = 0.5, color = "black") +
+  geom_histogram(position = "dodge", binwidth = 1, bins = 18, size = 0.5, color = "black") +
   facet_wrap(~estcivil) +
   cowplot::theme_cowplot() +
   theme(legend.position = "none") +
@@ -443,7 +388,7 @@ categorias <- length(unique(Muertes_CR$ocuparec))
 colores_aleatorios <- rainbow(categorias)
 
 ggplot(Muertes_CR, aes(x = grgruposcb, y = after_stat(density), fill = ocuparec)) +
-  geom_histogram(position = "dodge", size = 0.5, color = "black") +
+  geom_histogram(position = "dodge", binwidth = 1, bins = 18, size = 0.5, color = "black") +
   facet_wrap(~ocuparec) +
   cowplot::theme_cowplot() +
   theme(legend.position = "none") +
@@ -455,7 +400,7 @@ categorias <- length(unique(Muertes_CR$regsalud))
 colores_aleatorios <- rainbow(categorias)
 
 ggplot(Muertes_CR, aes(x = grgruposcb, y = after_stat(density), fill = regsalud)) +
-  geom_histogram(position = "dodge", size = 0.5, color = "black") +
+  geom_histogram(position = "dodge", binwidth = 1, bins = 18, size = 0.5, color = "black") +
   facet_wrap(~regsalud) +
   cowplot::theme_cowplot() +
   theme(legend.position = "none") +
@@ -464,7 +409,7 @@ ggplot(Muertes_CR, aes(x = grgruposcb, y = after_stat(density), fill = regsalud)
 
 ```
 
-Ahora se realizan gráficos de mosaico para seguir visualizando las relaciones entre los grupos de causa de muerte y las demás variables importante
+Ahora se realizan gráficos de mosaico para seguir visualizando las relaciones entre los grupos de causa de muerte y las demás variables importantes
 
 ```{r Relaciones_mosaicos}
 
@@ -509,6 +454,66 @@ Muertes_CR |>
 
 ```
 
+Sumado a lo anterior, se calculará la correlación de Spearman entre la variable asociada con los grupos de causa de muerte y las demás variables importantes, con el fin de realizar un gráfico de barras que represente dicha correlación para cada una de las variables importantes
+
+```{r}
+
+library(ggplot2)
+
+# Correlación entre los grupos de causa de muerte y la nacionalidad
+
+variable_importante <- as.numeric(as.factor(Muertes_CR$nacionalid))
+
+cor_spearman <- cor(Muertes_CR$grgruposcb, variable_importante, method = "spearman")
+
+vector_correlaciones <- c(cor_spearman)
+
+# Correlación entre los grupos de causa de muerte y el sexo
+
+variable_importante <- as.numeric(as.factor(Muertes_CR$sexo))
+
+cor_spearman <- cor(Muertes_CR$grgruposcb, variable_importante, method = "spearman")
+
+vector_correlaciones <- c(vector_correlaciones, cor_spearman)
+
+# Correlación entre los grupos de causa de muerte y el estado civil
+
+variable_importante <- as.numeric(as.factor(Muertes_CR$estcivil))
+
+cor_spearman <- cor(Muertes_CR$grgruposcb, variable_importante, method = "spearman")
+
+vector_correlaciones <- c(vector_correlaciones, cor_spearman)
+
+# Correlación entre los grupos de causa de muerte y la ocupación
+
+variable_importante <- as.numeric(as.factor(Muertes_CR$ocuparec))
+
+cor_spearman <- cor(Muertes_CR$grgruposcb, variable_importante, method = "spearman")
+
+vector_correlaciones <- c(vector_correlaciones, cor_spearman)
+
+# Correlación entre los grupos de causa de muerte y la región del Ministerio de Salud
+
+variable_importante <- as.numeric(as.factor(Muertes_CR$regsalud))
+
+cor_spearman <- cor(Muertes_CR$grgruposcb, variable_importante, method = "spearman")
+
+vector_correlaciones <- c(vector_correlaciones, cor_spearman)
+
+df <- data.frame(
+  
+  variables_importantes = c("Nacionalidad", "Sexo", "Estado civil", "Ocupación", "Región del Ministerio \nde Salud"),
+  
+  correlaciones_spearman = vector_correlaciones
+  
+)
+
+ggplot(df, aes(x = variables_importantes, y = correlaciones_spearman)) +
+  geom_bar(stat = "identity", fill = "skyblue", size = 0.5, color = 'black') +
+  labs(x = "Variable", y = "Correlación de Spearman") +
+  theme_minimal()
+
+```
 
 ### Relaciones entre diferentes variables importantes
 
@@ -601,7 +606,7 @@ Muertes_CR |>
 
 ```
 
-## Tablas de Contingencias
+### Tablas de Contingencias
 
 Se proceden a realizar cuadros que resumen la información de las variables más relevantes de la base de datos
 
