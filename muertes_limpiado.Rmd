@@ -5,8 +5,10 @@ date: "`r Sys.Date()`"
 output: html_document
 ---
 
-```{r setup, include = FALSE} 
-knitr::opts_chunk$set(warning = FALSE, message = FALSE) 
+```{r setup, include = FALSE}
+
+knitr::opts_chunk$set(warning = FALSE, message = FALSE)
+
 ```
 
 # Bitácora 2
@@ -16,67 +18,106 @@ knitr::opts_chunk$set(warning = FALSE, message = FALSE)
 Se inicia descargando la base
 
 ```{r Descarga_base}
+
 library(readxl)
+
 muertes_cr <- read_excel("datos/muertes_en_costa_rica_2014_2021.xlsx")
+
 ```
 
 Se dejan las edades de 15 años o más
 
 ```{r Nuevas_edades}
+
 muertes_cr <- muertes_cr[muertes_cr$edads >= 15, ]
+
 ```
 
 Se remueven las observaciones de años anteriores a 2014, la base de datos tiene muy pocas
 
 ```{r Nuevos_annos}
+
 muertes_cr <- muertes_cr[muertes_cr$anodef >= 2014, ]
+
 muertes_cr <- muertes_cr[muertes_cr$anotrab >= 2014, ]
+
 muertes_cr <- muertes_cr[muertes_cr$anodeclara >= 2014, ]
+
 ```
 
 Se procede a corregir los errores ortográficos de las principales variables
 
 ```{r Ortografia}
-# Se podrá todo sin tílde, para evitar errores al correr el programa
+
+# Se pondrá todo sin tílde, para evitar errores al correr el código
+
 muertes_cr$estcivil <- gsub("Ã³", "o", muertes_cr$estcivil)
+
 muertes_cr$ocuparec <- gsub("Ã¡", "a", muertes_cr$ocuparec)
+
 muertes_cr$ocuparec <- gsub("Ã©", "e", muertes_cr$ocuparec)
+
 muertes_cr$ocuparec <- gsub("Ã", "i", muertes_cr$ocuparec)
+
 muertes_cr$regsalud <- gsub("Ã", "i", muertes_cr$regsalud)
+
 muertes_cr$regsalud <- gsub("i³", "o", muertes_cr$regsalud)
+
 muertes_cr$provincia <- gsub("Ã©", "e", muertes_cr$provincia)
+
 muertes_cr$provincia <- gsub("Ã³", "o", muertes_cr$provincia)
+
 muertes_cr$provocu <- gsub("Ã©", "e", muertes_cr$provocu)
+
 muertes_cr$provocu <- gsub("Ã³", "o", muertes_cr$provocu)
+
 muertes_cr$provregis <- gsub("Ã©", "e", muertes_cr$provregis)
+
 muertes_cr$provregis <- gsub("Ã³", "o", muertes_cr$provregis)
+
 muertes_cr$reginec <- gsub("Ã", "i", muertes_cr$reginec)
+
 muertes_cr$reginec <- gsub("i³", "o", muertes_cr$reginec)
+
 muertes_cr$edadsrec <- gsub("100 y mÃ¡s", "100 - 121", muertes_cr$edadsrec)
+
 muertes_cr$autopsia <- gsub("Ã©", "e", muertes_cr$autopsia)
+
 muertes_cr$autopsia <- gsub("Ã", "i", muertes_cr$autopsia)
+
 muertes_cr$asistmed <- gsub("Ã©", "e", muertes_cr$asistmed)
+
 muertes_cr$asistmed <- gsub("Ã", "i", muertes_cr$asistmed)
+
 muertes_cr$reginec <- gsub("Paci­fico", "Pacifico", muertes_cr$reginec)
+
 muertes_cr$regsalud <- gsub("Paci­fico", "Pacifico", muertes_cr$regsalud)
+
 ```
 
 Hay muchas nacionalidades en la base de datos, pero la mayoría son de Costa Rica, por lo que se juntará a las demás en un grupo llamado Extranjero
 
 ```{r Nacionalidades}
+
 # Acá se ve que hay muchas nacionalidades
 (length(unique(muertes_cr$nacionalid)))
 
 # Se cambian todas las nacionalidades distintas de Costa Rica
 muertes_cr$nacionalid <- gsub("^(?!Costa Rica$).*", "Extranjero", muertes_cr$nacionalid, perl = TRUE)
+
 ```
 Debido a la baja cantidad de observaciones, en el estado civil se hará un grupo llamado "otros" para los que están en estado civil: ignorado, unión libre, menor y separado
 
 ```{r Estado_civil}
+
 muertes_cr$estcivil <- gsub("Ignorado", "Otros", muertes_cr$estcivil)
+
 muertes_cr$estcivil <- gsub("Union libre", "Otros", muertes_cr$estcivil)
+
 muertes_cr$estcivil <- gsub("Separado", "Otros", muertes_cr$estcivil)
+
 muertes_cr$estcivil <- gsub("Menor", "Otros", muertes_cr$estcivil)
+
 ```
 
 Nuevamente, por la baja cantidad de observaciones en algunas ocupaciones, se juntarán algunos grupos, en este caso se harán 2 grupos llamados "Trabajadores activos" y "Otros", que contienen a las siguientes ocupaciones:
@@ -86,23 +127,38 @@ Trabajadores activos: "Profesionales cientificos e intelectuales", "Agricultores
 Otros: "Pensionado", "Persona con discapacidad", "Estudiante", "Mal especificadas" y "Privado de libertad"
 
 ```{r Ocupacion}
+
 # Grupo de Trabajadores activos
+
 muertes_cr$ocuparec <- gsub("Profesionales cienti­ficos e intelectuales", "Trabajadores activos", muertes_cr$ocuparec)
+
 muertes_cr$ocuparec <- gsub("Agricultores y trabajadores calificados agropecuarios, forestales y pesqueros", "Trabajadores activos", muertes_cr$ocuparec)
+
 muertes_cr$ocuparec <- gsub("Ocupaciones elementales", "Trabajadores activos", muertes_cr$ocuparec)
+
 muertes_cr$ocuparec <- gsub("Trabajadores de los servicios y vendedores de comercios y mercados", "Trabajadores activos", muertes_cr$ocuparec)
+
 muertes_cr$ocuparec <- gsub("Operadores de instalaciones y maquinas y ensambladores", "Trabajadores activos", muertes_cr$ocuparec)
+
 muertes_cr$ocuparec <- gsub("Tecnicos y profesionales de nivel medio", "Trabajadores activos", muertes_cr$ocuparec)
+
 muertes_cr$ocuparec <- gsub("Oficiales, operarios y artesanos de artes mecanicas y de otros oficios", "Trabajadores activos", muertes_cr$ocuparec)
+
 muertes_cr$ocuparec <- gsub("Personal de apoyo administrativo", "Trabajadores activos", muertes_cr$ocuparec)
+
 muertes_cr$ocuparec <- gsub("Directores y gerentes", "Trabajadores activos", muertes_cr$ocuparec)
 
-# Grupo de otros
+# Grupo de Otros
 muertes_cr$ocuparec <- gsub("Pensionado", "Otros", muertes_cr$ocuparec)
+
 muertes_cr$ocuparec <- gsub("Persona con discapacidad", "Otros", muertes_cr$ocuparec)
+
 muertes_cr$ocuparec <- gsub("Estudiante", "Otros", muertes_cr$ocuparec)
+
 muertes_cr$ocuparec <- gsub("Mal especificadas", "Otros", muertes_cr$ocuparec)
+
 muertes_cr$ocuparec <- gsub("Privado de libertad", "Otros", muertes_cr$ocuparec)
+
 ```
 
 ## Análisis descriptivo
@@ -112,13 +168,16 @@ muertes_cr$ocuparec <- gsub("Privado de libertad", "Otros", muertes_cr$ocuparec)
 Para que el gráfico de los rangos etarios salga en orden, es necesario definir el orden antes
 
 ```{r Orden_rangos}
+
 muertes_cr$edadsrec <- factor(muertes_cr$edadsrec, levels = c("15 - 19", "20 - 24", "25 - 29", "30 - 34", "35 - 39", "40 - 44", "45 - 49", "50 - 54", "55 - 59", "60 - 64", "65 - 69", "70 - 74", "75 - 79", "80 - 84", "85 - 89", "90 - 94", "95 - 99", "100 - 121"))
+
 ```
 
 
 Se resumirán algunas de las variables de la base de datos con visualizaciones
 
 ```{r Visualizaciones_descriptivas}
+
 library(ggplot2)
 
 ggplot(muertes_cr, aes(x = anotrab)) +
@@ -250,6 +309,7 @@ ggplot(muertes_cr, aes(x = regsalud)) +
   labs(title = "Región registrada Ministerio de salud", x = "Región", y = "Frecuencia") +
   theme_minimal() +
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
 ```
 
 ### Visualizaciones adicionales
@@ -257,6 +317,7 @@ ggplot(muertes_cr, aes(x = regsalud)) +
 Se creará un DataFrame con las muertes por cada 1000 habitantes, para esto se usará la división de regiones que realiza el Ministerio de salud. Iniciamos obteniendo las variables necesarias
 
 ```{r Muertes_habitantes}
+
 # Se obtienen las variables necesarias, iniciando por las regiones
 annos <- unique(muertes_cr$anodef)
 
@@ -264,7 +325,9 @@ annos <- unique(muertes_cr$anodef)
 lista_muertes <- list()
 
 for (i in 1:length(annos)) {
+  
   lista_muertes[[i]] <- nrow(muertes_cr[muertes_cr$anodef == annos[i], ])
+  
 }
 
 lista_muertes <- unlist(lista_muertes)
@@ -275,23 +338,29 @@ poblacion <- c(4773130, 4832234, 4890379, 4947490, 5003402, 5058007, 5111238, 51
 # Ahora realizamos las muertes por cada 1000 habitantes según el año
 muertes1000 <- list()
 
-for (i in 1:length(annos)) {
+for(i in 1:length(annos)) {
+  
   muertes1000[[i]] <- ((lista_muertes[i] / poblacion[i]) * 1000)
+  
 }
 
 muertes1000 <- unlist(muertes1000)
+
 ```
 
 Realizamos el DataFrame correspondiente
 
 ```{r Df_1000}
+
 df_1000 <- data.frame(annos_def = annos, muertes = muertes1000)
 df_1000
+
 ```
 
 Finalmente representamos lo anterior con un gráfico
 
 ```{r Grafico}
+
 library(ggplot2)
 
 ggplot(data = df_1000, aes(x = annos_def, y = muertes)) +
@@ -299,6 +368,7 @@ ggplot(data = df_1000, aes(x = annos_def, y = muertes)) +
   geom_point(color = "chartreuse4", size = 3) +
   labs(title = "Tasa de Muerte por cada 1000 habitantes según el Año", x = "Año", y = "Tasa de Muerte") +
   theme_minimal()
+
 ```
 
 ## Gráficos de covarianza, correlación e histogramas
@@ -308,6 +378,7 @@ ggplot(data = df_1000, aes(x = annos_def, y = muertes)) +
 Primero se realizan histogramas relacionando los grupos de causa de muerte (eje x) y la densidad (eje y) de las diferentes subcategorías de las variables importantes
 
 ```{r Relaciones_histogramas}
+
 library(ggplot2)
 
 library(cowplot)
@@ -371,11 +442,13 @@ ggplot(muertes_cr, aes(x = grgruposcb, y = after_stat(density), fill = regsalud)
   theme(legend.position = "none") +
   labs(x = "Grupos de causa de muertes", y = "Densidad") +
   scale_color_manual(values = colores_aleatorios)
+
 ```
 
-Ahora se realizan gráficos de mosaico para seguir visualizando las relaciones entre los grupos de causa de muerte y las demás variables importantes
+Ahora se realizan gráficos de mapa de calor para seguir visualizando las relaciones entre los grupos de causa de muerte y las demás variables importantes
 
 ```{r Relaciones_mosaicos}
+
 library(ggplot2)
 
 library(dplyr)
@@ -384,41 +457,43 @@ muertes_cr |>
   count(grgruposcb, nacionalid) |>  
   ggplot(aes(x = grgruposcb, y = nacionalid)) +
   geom_tile(aes(fill = n)) +
-  labs(x ="Grupos de causa de muerte", y = "Nacionalidades") +
+  labs(x ="Grupos de causa de muerte", y = "Nacionalidades", fill = "Frecuencia") +
   theme_minimal()
 
 muertes_cr |> 
   count(grgruposcb, sexo) |>  
   ggplot(aes(x = grgruposcb, y = sexo)) +
   geom_tile(aes(fill = n)) +
-  labs(x ="Grupos de causa de muerte", y = "Sexos") +
+  labs(x ="Grupos de causa de muerte", y = "Sexos", fill = "Frecuencia") +
   theme_minimal()
 
 muertes_cr |> 
   count(grgruposcb, estcivil) |>  
   ggplot(aes(x = grgruposcb, y = estcivil)) +
   geom_tile(aes(fill = n)) +
-  labs(x ="Grupos de causa de muerte", y = "Estados civiles") +
+  labs(x ="Grupos de causa de muerte", y = "Estados civiles", fill = "Frecuencia") +
   theme_minimal()
 
 muertes_cr |> 
   count(grgruposcb, ocuparec) |>  
   ggplot(aes(x = grgruposcb, y = ocuparec)) +
   geom_tile(aes(fill = n)) +
-  labs(x ="Grupos de causa de muerte", y = "Ocupaciones") +
+  labs(x ="Grupos de causa de muerte", y = "Ocupaciones", fill = "Frecuencia") +
   theme_minimal()
 
 muertes_cr |> 
   count(grgruposcb, regsalud) |>  
   ggplot(aes(x = grgruposcb, y = regsalud)) +
   geom_tile(aes(fill = n)) +
-  labs(x ="Grupos de causa de muerte", y = "Regiones del Ministerio de Salud") +
+  labs(x ="Grupos de causa de muerte", y = "Regiones del Ministerio de Salud", fill = "Frecuencia") +
   theme_minimal()
+
 ```
 
 Sumado a lo anterior, se calculará la correlación de Spearman entre la variable asociada con los grupos de causa de muerte y las demás variables importantes, con el fin de realizar un gráfico de barras que represente dicha correlación para cada una de las variables importantes
 
 ```{r Correlaciones}
+
 library(ggplot2)
 
 # Correlación entre los grupos de causa de muerte y la nacionalidad
@@ -469,17 +544,21 @@ df <- data.frame(
   
 )
 
+# Se crea el gráfico de barras entre las variables categóricas importantes y la correlación de Spearman entre ellas y la variable de grupos de causa de muerte
+
 ggplot(df, aes(x = variables_importantes, y = correlaciones_spearman)) +
   geom_bar(stat = "identity", fill = "skyblue", size = 0.5, color = 'black') +
   labs(x = "Variable", y = "Correlación de Spearman") +
   theme_minimal()
+
 ```
 
 ### Relaciones entre diferentes variables importantes
 
-Seguidamente se realizarán gráficos de mosaico entre las variables importantes, excluyendo el grupo de causa de muerte, para visualizar si hay alguna relación entre ellas
+Seguidamente, se realizarán gráficos de mapa de calor entre las variables importantes, excluyendo el grupo de causa de muerte, para visualizar si hay alguna relación entre ellas
 
 ```{r Relaciones_adicionales_mosaicos}
+
 library(ggplot2)
 
 library(dplyr)
@@ -490,28 +569,28 @@ muertes_cr |>
   count(nacionalid, sexo) |>  
   ggplot(aes(x = nacionalid, y = sexo)) +
   geom_tile(aes(fill = n)) +
-  labs(x ="Nacionalidades", y = "Sexos") +
+  labs(x ="Nacionalidades", y = "Sexos", fill = "Frecuencia") +
   theme_minimal()
 
 muertes_cr |> 
   count(nacionalid, estcivil) |>  
   ggplot(aes(x = nacionalid, y = estcivil)) +
   geom_tile(aes(fill = n)) +
-  labs(x ="Nacionalidades", y = "Estados civiles") +
+  labs(x ="Nacionalidades", y = "Estados civiles", fill = "Frecuencia") +
   theme_minimal()
 
 muertes_cr |> 
   count(nacionalid, ocuparec) |>  
   ggplot(aes(x = nacionalid, y = ocuparec)) +
   geom_tile(aes(fill = n)) +
-  labs(x ="Nacionalidades", y = "Ocupaciones") +
+  labs(x ="Nacionalidades", y = "Ocupaciones", fill = "Frecuencia") +
   theme_minimal()
 
 muertes_cr |> 
   count(nacionalid, regsalud) |>  
   ggplot(aes(x = nacionalid, y = regsalud)) +
   geom_tile(aes(fill = n)) +
-  labs(x ="Nacionalidades", y = "Regiones del Ministerio de Salud") +
+  labs(x ="Nacionalidades", y = "Regiones del Ministerio de Salud", fill = "Frecuencia") +
   theme_minimal()
 
 # Relaciones entre el sexo y las demás variables
@@ -520,21 +599,21 @@ muertes_cr |>
   count(sexo, estcivil) |>  
   ggplot(aes(x = sexo, y = estcivil)) +
   geom_tile(aes(fill = n)) +
-  labs(x ="Sexos", y = "Estados Civiles") +
+  labs(x ="Sexos", y = "Estados Civiles", fill = "Frecuencia") +
   theme_minimal()
 
 muertes_cr |> 
   count(sexo, ocuparec) |>  
   ggplot(aes(x = sexo, y = ocuparec)) +
   geom_tile(aes(fill = n)) +
-  labs(x ="Sexos", y = "Ocupaciones") +
+  labs(x ="Sexos", y = "Ocupaciones", fill = "Frecuencia") +
   theme_minimal()
 
 muertes_cr |> 
   count(sexo, regsalud) |>  
   ggplot(aes(x = sexo, y = regsalud)) +
   geom_tile(aes(fill = n)) +
-  labs(x ="Sexos", y = "Regiones del Ministerio de Salud") +
+  labs(x ="Sexos", y = "Regiones del Ministerio de Salud", fill = "Frecuencia") +
   theme_minimal()
 
 # Relaciones entre el estado civil y las demás variables
@@ -543,14 +622,14 @@ muertes_cr |>
   count(estcivil, ocuparec) |>  
   ggplot(aes(x = estcivil, y = ocuparec)) +
   geom_tile(aes(fill = n)) +
-  labs(x ="Estados civiles", y = "Ocupaciones") +
+  labs(x ="Estados civiles", y = "Ocupaciones", fill = "Frecuencia") +
   theme_minimal()
 
 muertes_cr |> 
   count(estcivil, regsalud) |>  
   ggplot(aes(x = estcivil, y = regsalud)) +
   geom_tile(aes(fill = n)) +
-  labs(x ="Estados civiles", y = "Regiones del Ministerio de Salud") +
+  labs(x ="Estados civiles", y = "Regiones del Ministerio de Salud", fill = "Frecuencia") +
   theme_minimal()
 
 # Relaciones entre la ocupación y las demás variables
@@ -559,16 +638,18 @@ muertes_cr |>
   count(ocuparec, regsalud) |>  
   ggplot(aes(x = ocuparec, y = regsalud)) +
   geom_tile(aes(fill = n)) +
-  labs(x ="Ocupaciones", y = "Regiones del Ministerio de Salud") +
+  labs(x ="Ocupaciones", y = "Regiones del Ministerio de Salud", fill = "Frecuencia") +
   theme_minimal() +
   theme(axis.text.x = element_text(angle = 90, hjust = 1))
+
 ```
 
-### Tablas de Contingencias
+## Tablas de Contingencias
 
 Se proceden a realizar cuadros que resumen la información de las variables más relevantes de la base de datos
 
 ```{r Tablas_contingencias}
+
 library(knitr)
 
 tabla_1 <- table(muertes_cr$grgruposcb, muertes_cr$regsalud)
@@ -600,45 +681,61 @@ kable(tabla_4_prop, caption = "")
 
 tabla_5_prop <- addmargins(prop.table(tabla_5, margin = 1)*100) 
 kable(tabla_5_prop, caption = "")
+
 ```
 
 ## Propuesta metodológica
 
 ### Proyecto maqueta
 
-Se iniciará creando una tabla de ejemplo.
+Se iniciará creando una tabla de ejemplo
 
 ```{r Creacion_tablas}
+
 tabla_prueba <- as.table(rbind(
+  
   c(8, 5, 3),
   c(2, 7, 11),
   c(5, 7, 6)
+  
 ))
 
 # Asignamos los nombres de las columnas
 
 dimnames(tabla_prueba) <- list(
+  
   Compras = c(
+    
     "Arroz",
+    
     "Cereal",
+    
     "Bebidas"
+    
   ),
+  
   Voto = c("A", "B", "C")
+  
 )
 
 knitr::kable(tabla_prueba)
+
 ```
 
-Realizamos la prueba Chi-cuadrado.
+Realizamos la prueba Chi-cuadrado
 
-```{r Chi-cuadrado}
+```{r prueba_chi-cuadrado}
+
 chisq.test(tabla_prueba, B = 2000)
+
 ```
 
-Se procede a explorar los parámetros de esta función.
+Se procede a explorar los parámetros de esta función
 
 ```{r Parametros}
+
 # B son las simulaciones de Montecarlo necesarias
+
 chisq.test(x = tabla_prueba, B = 10000)
 
 # Con simulate.p.value, se indica si el valor p se encuentra a través de una simulación de Montecarlo (TRUE) o con la chi-cuadrado (FALSE) que usa por defecto
@@ -662,12 +759,15 @@ chisq.test(x = tabla_prueba, y = tabla_prueba, correct = FALSE, rescale.p = TRUE
 # p es un vector de probabilidades del mismo tamaño que x, define el nivel de significancia de p
 
 chisq.test(x = tabla_prueba, p = 0.05, correct = FALSE, simulate.p.value = FALSE, B = 10000)
+
 ```
 
-Con el conocimiento de cada uno de los parámetros, se procede a realizar las pruebas para las tablas de contingencias creadas anteriormente.
+Con el conocimiento de cada uno de los parámetros, se procede a realizar las pruebas para las tablas de contingencias creadas anteriormente
 
 ```{r Pruebas_independencia}
+
 # Se inicia con las tablas con valores absolutos
+
 chisq.test(x = tabla_1, correct = TRUE)
 
 chisq.test(x = tabla_2, correct = TRUE)
@@ -679,6 +779,7 @@ chisq.test(x = tabla_4, correct = TRUE)
 chisq.test(x = tabla_5, correct = TRUE)
 
 # Luego, se procede con las tablas que tienen porcentajes
+
 chisq.test(x = tabla_1_prop, correct = TRUE)
 
 chisq.test(x = tabla_2_prop, correct = TRUE)
@@ -688,5 +789,6 @@ chisq.test(x = tabla_3_prop, correct = TRUE)
 chisq.test(x = tabla_4_prop, correct = TRUE)
 
 chisq.test(x = tabla_5_prop, correct = TRUE)
+
 ```
 
