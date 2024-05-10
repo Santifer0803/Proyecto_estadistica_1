@@ -182,131 +182,131 @@ library(ggplot2)
 
 ggplot(muertes_cr, aes(x = anotrab)) +
     geom_histogram(binwidth = 1, fill = "blue", color = "black") +
-    labs(title = "Año de trabajo", x = "Año de trabajo", y = "Cantidad") +
+    labs(x = "Año de trabajo", y = "Cantidad", caption = "Fuente: elaboración propia") +
     theme_minimal()
 
 ggplot(muertes_cr, aes(x = mestrab)) +
   geom_bar(fill = "skyblue") +
-  labs(title = "Frecuencia de los meses", x = "Meses", y = "Frecuencia") +
+  labs(x = "Meses", y = "Frecuencia", caption = "Fuente: elaboración propia") +
   theme_minimal() +
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
 
 ggplot(muertes_cr, aes(x = nacionalid)) +
   geom_bar(fill = "darkgoldenrod2") +
-  labs(title = "Frecuencia de las nacionalidades", x = "Nacionalidad", y = "Frecuencia") +
+  labs(x = "Nacionalidad", y = "Frecuencia", caption = "Fuente: elaboración propia") +
   theme_minimal() +
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
 
 ggplot(muertes_cr, aes(x = sexo)) +
   geom_bar(fill = "coral") +
-  labs(title = "Frecuencia de los sexos", x = "Sexos", y = "Frecuencia") +
+  labs(x = "Sexos", y = "Frecuencia", caption = "Fuente: elaboración propia") +
   theme_minimal() +
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
 
 ggplot(muertes_cr, aes(x = estcivil)) +
   geom_bar(fill = "purple") +
-  labs(title = "Frecuencia de los estados civiles", x = "Est. Civil", y = "Frecuencia") +
+  labs(x = "Est. Civil", y = "Frecuencia", caption = "Fuente: elaboración propia") +
   theme_minimal() +
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
 
 ggplot(muertes_cr, aes(x = edads)) +
     geom_histogram(binwidth = 1, fill = "bisque3", color = "black") +
-    labs(title = "Edades", x = "Edades", y = "Cantidad") +
+    labs(x = "Edades", y = "Cantidad", caption = "Fuente: elaboración propia") +
     theme_minimal()
 
 ggplot(muertes_cr, aes(x = edadsrec)) +
   geom_bar(fill = "green3") +
-  labs(title = "Frecuencia de los rangos etarios", x = "R. etarios", y = "Frecuencia") +
+  labs(x = "R. etarios", y = "Frecuencia", caption = "Fuente: elaboración propia") +
   theme_minimal() +
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
 
 ggplot(muertes_cr, aes(x = provincia)) +
   geom_bar(fill = "cornflowerblue") +
-  labs(title = "Frecuencia de las provincias", x = "Provincias", y = "Frecuencia") +
+  labs(x = "Provincias", y = "Frecuencia", caption = "Fuente: elaboración propia") +
   theme_minimal() +
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
 
 ggplot(muertes_cr, aes(x = IU)) +
     geom_histogram(binwidth = 1, fill = "cyan", color = "black") +
-    labs(title = "IU", x = "IU", y = "Cantidad") +
+    labs(x = "IU", y = "Cantidad", caption = "Fuente: elaboración propia") +
     theme_minimal()
 
 ggplot(muertes_cr, aes(x = autopsia)) +
   geom_bar(fill = "darkolivegreen") +
-  labs(title = "Frecuencia de autopsias", x = "Autopsias", y = "Frecuencia") +
+  labs(x = "Autopsias", y = "Frecuencia", caption = "Fuente: elaboración propia") +
   theme_minimal() +
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
 
 ggplot(muertes_cr, aes(x = asistmed)) +
   geom_bar(fill = "darkolivegreen4") +
-  labs(title = "Frecuencia de asistencia medica", x = "Asistencia medica", y = "Frecuencia") +
+  labs(x = "Asistencia medica", y = "Frecuencia", caption = "Fuente: elaboración propia") +
   theme_minimal() +
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
 
 ggplot(muertes_cr, aes(x = provocu)) +
   geom_bar(fill = "darkorchid") +
-  labs(title = "Frecuencia de provincia", x = "Provincia", y = "Frecuencia") +
+  labs(x = "Provincia", y = "Frecuencia", caption = "Fuente: elaboración propia") +
   theme_minimal() +
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
 
 ggplot(muertes_cr, aes(x = diadef)) +
     geom_histogram(binwidth = 1, fill = "deeppink2", color = "black") +
-    labs(title = "Dia de muerte", x = "Día", y = "Cantidad") +
+    labs(x = "Día", y = "Cantidad", caption = "Fuente: elaboración propia") +
     theme_minimal()
 
 ggplot(muertes_cr, aes(x = mesdef)) +
   geom_bar(fill = "darkgreen") +
-  labs(title = "Mes de muerte", x = "Mes", y = "Frecuencia") +
+  labs(x = "Mes", y = "Frecuencia", caption = "Fuente: elaboración propia") +
   theme_minimal() +
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
 
 ggplot(muertes_cr, aes(x = anodef)) +
     geom_histogram(binwidth = 1, fill = "deeppink3", color = "black") +
-    labs(title = "Año de muerte", x = "Año", y = "Cantidad") +
+    labs(x = "Año", y = "Cantidad", caption = "Fuente: elaboración propia") +
     theme_minimal()
 
 ggplot(muertes_cr, aes(x = ocuparec)) +
   geom_bar(fill = "aquamarine2") +
-  labs(title = "Ocupación", x = "Ocupación", y = "Frecuencia") +
+  labs(x = "Ocupación", y = "Frecuencia", caption = "Fuente: elaboración propia") +
   theme_minimal() +
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
 
 ggplot(muertes_cr, aes(x = provregis)) +
   geom_bar(fill = "chocolate1") +
-  labs(title = "Provincia de residencia", x = "Provincia", y = "Frecuencia") +
+  labs(x = "Provincia", y = "Frecuencia", caption = "Fuente: elaboración propia") +
   theme_minimal() +
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
 
 ggplot(muertes_cr, aes(x = diadeclara)) +
     geom_histogram(binwidth = 1, fill = "cornsilk2", color = "black") +
-    labs(title = "Día de declaración", x = "Día", y = "Cantidad") +
+    labs(x = "Día", y = "Cantidad", caption = "Fuente: elaboración propia") +
     theme_minimal()
 
 ggplot(muertes_cr, aes(x = mesdeclara)) +
   geom_bar(fill = "deepskyblue2") +
-  labs(title = "Mes declaración", x = "Mes", y = "Frecuencia") +
+  labs(x = "Mes", y = "Frecuencia", caption = "Fuente: elaboración propia") +
   theme_minimal() +
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
 
 ggplot(muertes_cr, aes(x = anodeclara)) +
     geom_histogram(binwidth = 1, fill = "chartreuse3", color = "black") +
-    labs(title = "Año de declaración", x = "Año", y = "Cantidad") +
+    labs(x = "Año", y = "Cantidad", caption = "Fuente: elaboración propia") +
     theme_minimal()
 
 ggplot(muertes_cr, aes(x = grgruposcb)) +
     geom_histogram(binwidth = 1, fill = "darksalmon", color = "black") +
-    labs(title = "Grupo muerte", x = "Grupo muerte", y = "Cantidad") +
+    labs(x = "Grupo muerte", y = "Cantidad", caption = "Fuente: elaboración propia") +
     theme_minimal()
 
 ggplot(muertes_cr, aes(x = reginec)) +
   geom_bar(fill = "azure3") +
-  labs(title = "Región registrada Inec", x = "Región", y = "Frecuencia") +
+  labs(x = "Región", y = "Frecuencia", caption = "Fuente: elaboración propia") +
   theme_minimal() +
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
 
 ggplot(muertes_cr, aes(x = regsalud)) +
   geom_bar(fill = "azure3") +
-  labs(title = "Región registrada Ministerio de salud", x = "Región", y = "Frecuencia") +
+  labs(x = "Región", y = "Frecuencia", caption = "Fuente: elaboración propia") +
   theme_minimal() +
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
 
@@ -366,7 +366,7 @@ library(ggplot2)
 ggplot(data = df_1000, aes(x = annos_def, y = muertes)) +
   geom_line(color = "chartreuse3") +
   geom_point(color = "chartreuse4", size = 3) +
-  labs(title = "Tasa de Muerte por cada 1000 habitantes según el Año", x = "Año", y = "Tasa de Muerte") +
+  labs(x = "Año", y = "Tasa de Muerte", caption = "Fuente: elaboración propia") +
   theme_minimal()
 
 ```
@@ -392,7 +392,7 @@ ggplot(muertes_cr, aes(x = grgruposcb, y = after_stat(density), fill = nacionali
   facet_wrap(~nacionalid) +
   cowplot::theme_cowplot() +
   theme(legend.position = "none") +
-  labs(x = "Grupos de causa de muertes", y = "Densidad") +
+  labs(x = "Grupos de causa de muertes", y = "Densidad", caption = "Fuente: elaboración propia") +
   scale_color_manual(values = colores_aleatorios)
 
 categorias <- length(unique(muertes_cr$sexo))
@@ -404,7 +404,7 @@ ggplot(muertes_cr, aes(x = grgruposcb, y = after_stat(density), fill = sexo)) +
   facet_wrap(~sexo) +
   cowplot::theme_cowplot() +
   theme(legend.position = "none") +
-  labs(x = "Grupos de causa de muertes", y = "Densidad") +
+  labs(x = "Grupos de causa de muertes", y = "Densidad", caption = "Fuente: elaboración propia") +
   scale_color_manual(values = colores_aleatorios)
 
 categorias <- length(unique(muertes_cr$estcivil))
@@ -416,7 +416,7 @@ ggplot(muertes_cr, aes(x = grgruposcb, y = after_stat(density), fill = estcivil)
   facet_wrap(~estcivil) +
   cowplot::theme_cowplot() +
   theme(legend.position = "none") +
-  labs(x = "Grupos de causa de muertes", y = "Densidad") +
+  labs(x = "Grupos de causa de muertes", y = "Densidad", caption = "Fuente: elaboración propia") +
   scale_color_manual(values = colores_aleatorios)
 
 categorias <- length(unique(muertes_cr$ocuparec))
@@ -428,7 +428,7 @@ ggplot(muertes_cr, aes(x = grgruposcb, y = after_stat(density), fill = ocuparec)
   facet_wrap(~ocuparec) +
   cowplot::theme_cowplot() +
   theme(legend.position = "none") +
-  labs(x = "Grupos de causa de muertes", y = "Densidad") +
+  labs(x = "Grupos de causa de muertes", y = "Densidad", caption = "Fuente: elaboración propia") +
   scale_color_manual(values = colores_aleatorios)
 
 categorias <- length(unique(muertes_cr$regsalud))
@@ -440,7 +440,7 @@ ggplot(muertes_cr, aes(x = grgruposcb, y = after_stat(density), fill = regsalud)
   facet_wrap(~regsalud) +
   cowplot::theme_cowplot() +
   theme(legend.position = "none") +
-  labs(x = "Grupos de causa de muertes", y = "Densidad") +
+  labs(x = "Grupos de causa de muertes", y = "Densidad", caption = "Fuente: elaboración propia") +
   scale_color_manual(values = colores_aleatorios)
 
 ```
@@ -457,35 +457,35 @@ muertes_cr |>
   count(grgruposcb, nacionalid) |>  
   ggplot(aes(x = grgruposcb, y = nacionalid)) +
   geom_tile(aes(fill = n)) +
-  labs(x ="Grupos de causa de muerte", y = "Nacionalidades", fill = "Frecuencia") +
+  labs(x ="Grupos de causa de muerte", y = "Nacionalidades", fill = "Frecuencia", caption = "Fuente: elaboración propia") +
   theme_minimal()
 
 muertes_cr |> 
   count(grgruposcb, sexo) |>  
   ggplot(aes(x = grgruposcb, y = sexo)) +
   geom_tile(aes(fill = n)) +
-  labs(x ="Grupos de causa de muerte", y = "Sexos", fill = "Frecuencia") +
+  labs(x ="Grupos de causa de muerte", y = "Sexos", fill = "Frecuencia", caption = "Fuente: elaboración propia") +
   theme_minimal()
 
 muertes_cr |> 
   count(grgruposcb, estcivil) |>  
   ggplot(aes(x = grgruposcb, y = estcivil)) +
   geom_tile(aes(fill = n)) +
-  labs(x ="Grupos de causa de muerte", y = "Estados civiles", fill = "Frecuencia") +
+  labs(x ="Grupos de causa de muerte", y = "Estados civiles", fill = "Frecuencia", caption = "Fuente: elaboración propia") +
   theme_minimal()
 
 muertes_cr |> 
   count(grgruposcb, ocuparec) |>  
   ggplot(aes(x = grgruposcb, y = ocuparec)) +
   geom_tile(aes(fill = n)) +
-  labs(x ="Grupos de causa de muerte", y = "Ocupaciones", fill = "Frecuencia") +
+  labs(x ="Grupos de causa de muerte", y = "Ocupaciones", fill = "Frecuencia", caption = "Fuente: elaboración propia") +
   theme_minimal()
 
 muertes_cr |> 
   count(grgruposcb, regsalud) |>  
   ggplot(aes(x = grgruposcb, y = regsalud)) +
   geom_tile(aes(fill = n)) +
-  labs(x ="Grupos de causa de muerte", y = "Regiones del Ministerio de Salud", fill = "Frecuencia") +
+  labs(x ="Grupos de causa de muerte", y = "Regiones del Ministerio de Salud", fill = "Frecuencia", caption = "Fuente: elaboración propia") +
   theme_minimal()
 
 ```
@@ -548,7 +548,7 @@ df <- data.frame(
 
 ggplot(df, aes(x = variables_importantes, y = correlaciones_spearman)) +
   geom_bar(stat = "identity", fill = "skyblue", size = 0.5, color = 'black') +
-  labs(x = "Variable", y = "Correlación de Spearman") +
+  labs(x = "Variable", y = "Correlación de Spearman", caption = "Fuente: elaboración propia") +
   theme_minimal()
 
 ```
@@ -569,28 +569,28 @@ muertes_cr |>
   count(nacionalid, sexo) |>  
   ggplot(aes(x = nacionalid, y = sexo)) +
   geom_tile(aes(fill = n)) +
-  labs(x ="Nacionalidades", y = "Sexos", fill = "Frecuencia") +
+  labs(x ="Nacionalidades", y = "Sexos", fill = "Frecuencia", caption = "Fuente: elaboración propia") +
   theme_minimal()
 
 muertes_cr |> 
   count(nacionalid, estcivil) |>  
   ggplot(aes(x = nacionalid, y = estcivil)) +
   geom_tile(aes(fill = n)) +
-  labs(x ="Nacionalidades", y = "Estados civiles", fill = "Frecuencia") +
+  labs(x ="Nacionalidades", y = "Estados civiles", fill = "Frecuencia", caption = "Fuente: elaboración propia") +
   theme_minimal()
 
 muertes_cr |> 
   count(nacionalid, ocuparec) |>  
   ggplot(aes(x = nacionalid, y = ocuparec)) +
   geom_tile(aes(fill = n)) +
-  labs(x ="Nacionalidades", y = "Ocupaciones", fill = "Frecuencia") +
+  labs(x ="Nacionalidades", y = "Ocupaciones", fill = "Frecuencia", caption = "Fuente: elaboración propia") +
   theme_minimal()
 
 muertes_cr |> 
   count(nacionalid, regsalud) |>  
   ggplot(aes(x = nacionalid, y = regsalud)) +
   geom_tile(aes(fill = n)) +
-  labs(x ="Nacionalidades", y = "Regiones del Ministerio de Salud", fill = "Frecuencia") +
+  labs(x ="Nacionalidades", y = "Regiones del Ministerio de Salud", fill = "Frecuencia", caption = "Fuente: elaboración propia") +
   theme_minimal()
 
 # Relaciones entre el sexo y las demás variables
@@ -599,21 +599,21 @@ muertes_cr |>
   count(sexo, estcivil) |>  
   ggplot(aes(x = sexo, y = estcivil)) +
   geom_tile(aes(fill = n)) +
-  labs(x ="Sexos", y = "Estados Civiles", fill = "Frecuencia") +
+  labs(x ="Sexos", y = "Estados Civiles", fill = "Frecuencia", caption = "Fuente: elaboración propia") +
   theme_minimal()
 
 muertes_cr |> 
   count(sexo, ocuparec) |>  
   ggplot(aes(x = sexo, y = ocuparec)) +
   geom_tile(aes(fill = n)) +
-  labs(x ="Sexos", y = "Ocupaciones", fill = "Frecuencia") +
+  labs(x ="Sexos", y = "Ocupaciones", fill = "Frecuencia", caption = "Fuente: elaboración propia") +
   theme_minimal()
 
 muertes_cr |> 
   count(sexo, regsalud) |>  
   ggplot(aes(x = sexo, y = regsalud)) +
   geom_tile(aes(fill = n)) +
-  labs(x ="Sexos", y = "Regiones del Ministerio de Salud", fill = "Frecuencia") +
+  labs(x ="Sexos", y = "Regiones del Ministerio de Salud", fill = "Frecuencia", caption = "Fuente: elaboración propia") +
   theme_minimal()
 
 # Relaciones entre el estado civil y las demás variables
@@ -622,14 +622,14 @@ muertes_cr |>
   count(estcivil, ocuparec) |>  
   ggplot(aes(x = estcivil, y = ocuparec)) +
   geom_tile(aes(fill = n)) +
-  labs(x ="Estados civiles", y = "Ocupaciones", fill = "Frecuencia") +
+  labs(x ="Estados civiles", y = "Ocupaciones", fill = "Frecuencia", caption = "Fuente: elaboración propia") +
   theme_minimal()
 
 muertes_cr |> 
   count(estcivil, regsalud) |>  
   ggplot(aes(x = estcivil, y = regsalud)) +
   geom_tile(aes(fill = n)) +
-  labs(x ="Estados civiles", y = "Regiones del Ministerio de Salud", fill = "Frecuencia") +
+  labs(x ="Estados civiles", y = "Regiones del Ministerio de Salud", fill = "Frecuencia", caption = "Fuente: elaboración propia") +
   theme_minimal()
 
 # Relaciones entre la ocupación y las demás variables
@@ -638,7 +638,7 @@ muertes_cr |>
   count(ocuparec, regsalud) |>  
   ggplot(aes(x = ocuparec, y = regsalud)) +
   geom_tile(aes(fill = n)) +
-  labs(x ="Ocupaciones", y = "Regiones del Ministerio de Salud", fill = "Frecuencia") +
+  labs(x ="Ocupaciones", y = "Regiones del Ministerio de Salud", fill = "Frecuencia", caption = "Fuente: elaboración propia") +
   theme_minimal() +
   theme(axis.text.x = element_text(angle = 90, hjust = 1))
 
