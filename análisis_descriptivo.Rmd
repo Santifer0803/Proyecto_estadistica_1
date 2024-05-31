@@ -161,6 +161,32 @@ muertes_cr$ocuparec <- gsub("Privado de libertad", "Otros", muertes_cr$ocuparec)
 
 ```
 
+Posteriormente, se procede a realizr una columna con una nueva división de los grupos de muerte, esta para proporcionar una comparación con los grupos de muerte realizados por el INEC, además, de esta manera se asegura que los grupos tengan suficientes personas para la prueba de independencia. Los nuevos grupos, basados en los del INEC, son los siguientes:
+
+Enfermedades infecciosas y parasitarias (1): Ciertas enfermedades infecciosas y parasitarias $1$.
+
+Enfermedades crónicas y degenerativas (2): Tumores (neoplastias) $2$, enfermedades en el sistema circulatorio $7$, enfermedades del sistema respiratorio $8$, enfermedades del sistema digestivo $9$, enfermedades del sistema genitourinario $10$ y enfermedades del sistema osteomuscular y del tejido conjuntivo $13$.
+
+Trastornos metabólicos y nutricionales (3): Enfermedades endocrinas, nutricionales y metabólicas $3$, enfermedades de la sangre y de los órganos hematopoyéticos, ciertos trastornos que afectan al mecanismo de la inmunidad $4$.
+
+Trastornos mentales y del comportamiento (4): Trastornos mentales y del comportamiento $5$, enfermedades del sistema nervioso y de los órganos de los sentidos del ojo y sus anexos, del oído y de la apófisis mastoides $6$.
+
+Condiciones especiales y anomalías (5): Complicaciones del embarazo, del parto y del puerperio $11$, enfermedades de la piel y del tejido celular subcutaneo $12$, malformaciones congénitas, deformidades y anomalías cromosómicas $14$, ciertas afecciones originadas en el periodo perinatal $15$, signos, síntomas y hallazgos anormales clínicos y de laboratorio no clasificados en otra parte $16$ y Causas externas de morbilidad y mortalidad $17$.
+
+```{r Nueva_col}
+# Se agregan todos los casos a considerar
+muertes_cr <- muertes_cr %>%
+  mutate(grp_muerte = case_when(
+    grgruposcb %in% c(1) ~ 1,
+    grgruposcb %in% c(2, 7, 8, 9, 10, 13) ~ 2,
+    grgruposcb %in% c(3, 4) ~ 3,
+    grgruposcb %in% c(5, 6) ~ 4,
+    grgruposcb %in% c(11, 12, 14, 15, 16, 17) ~ 5
+  ))
+
+muertes_cr$grp_muerte <- as.numeric(muertes_cr$grp_muerte)
+```
+
 ## Análisis descriptivo
 
 ### Visualización de variables únicas
@@ -295,7 +321,7 @@ ggplot(muertes_cr, aes(x = anodeclara)) +
 
 ggplot(muertes_cr, aes(x = grgruposcb)) +
     geom_histogram(binwidth = 1, fill = "darksalmon", color = "black") +
-    labs(x = "Grupo muerte", y = "Cantidad", caption = "Fuente: elaboración propia") +
+    labs(x = "Grupo de muerte", y = "Cantidad", caption = "Fuente: elaboración propia") +
     theme_minimal()
 
 ggplot(muertes_cr, aes(x = reginec)) +
@@ -305,11 +331,16 @@ ggplot(muertes_cr, aes(x = reginec)) +
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
 
 ggplot(muertes_cr, aes(x = regsalud)) +
-  geom_bar(fill = "azure3") +
+  geom_bar(fill = "deepskyblue3") +
   labs(x = "Región", y = "Frecuencia", caption = "Fuente: elaboración propia") +
   theme_minimal() +
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
 
+ggplot(muertes_cr, aes(x = grp_muerte)) +
+    geom_histogram(binwidth = 1, fill = "lightsteelblue3", color = "black") +
+    labs(x = "Grupo de muerte", y = "Cantidad", caption = "Fuente: elaboración propia") +
+    scale_y_continuous(labels = function(x) format(x, scientific = FALSE)) +
+    theme_minimal()
 ```
 
 ### Visualizaciones adicionales
@@ -450,8 +481,6 @@ Ahora se realizan gráficos de mapa de calor para seguir visualizando las relaci
 ```{r Relaciones_mosaicos}
 
 library(ggplot2)
-
-library(dplyr)
 
 muertes_cr |> 
   count(grgruposcb, nacionalid) |>  
@@ -650,8 +679,8 @@ Se proceden a realizar cuadros que resumen la información de las variables más
 
 ```{r Tablas_contingencias}
 
+# Grupo de muerte del INEC
 library(knitr)
-
 tabla_1 <- table(muertes_cr$grgruposcb, muertes_cr$regsalud)
 kable(tabla_1, caption = "")
 
@@ -667,20 +696,21 @@ kable(tabla_4, caption = "")
 tabla_5 <- table(muertes_cr$grgruposcb, muertes_cr$ocuparec)
 kable(tabla_5, caption = "")
 
-tabla_1_prop <- addmargins(prop.table(tabla_1, margin = 1)*100) 
-kable(tabla_1_prop, caption = "")
+# Grupo de muerte de elaborado por grupo
+tabla_1_mod <- table(muertes_cr$grp_muerte, muertes_cr$regsalud)
+kable(tabla_1, caption = "")
 
-tabla_2_prop <- addmargins(prop.table(tabla_2, margin = 1)*100) 
-kable(tabla_2_prop, caption = "")
+tabla_2_mod <- table(muertes_cr$grp_muerte, muertes_cr$nacionalid)
+kable(tabla_2, caption = "")
 
-tabla_3_prop <- addmargins(prop.table(tabla_3, margin = 1)*100) 
-kable(tabla_3_prop, caption = "")
+tabla_3_mod <- table(muertes_cr$grp_muerte, muertes_cr$sexo)
+kable(tabla_3, caption = "")
 
-tabla_4_prop <- addmargins(prop.table(tabla_4, margin = 1)*100) 
-kable(tabla_4_prop, caption = "")
+tabla_4_mod <- table(muertes_cr$grp_muerte, muertes_cr$estcivil)
+kable(tabla_4, caption = "")
 
-tabla_5_prop <- addmargins(prop.table(tabla_5, margin = 1)*100) 
-kable(tabla_5_prop, caption = "")
+tabla_5_mod <- table(muertes_cr$grp_muerte, muertes_cr$ocuparec)
+kable(tabla_5, caption = "")
 
 ```
 
@@ -688,7 +718,7 @@ kable(tabla_5_prop, caption = "")
 
 ### Proyecto maqueta
 
-Se iniciará creando una tabla de ejemplo
+Se iniciará creando una tabla de ejemplo.
 
 ```{r Creacion_tablas}
 
@@ -722,7 +752,7 @@ knitr::kable(tabla_prueba)
 
 ```
 
-Realizamos la prueba Chi-cuadrado
+Realizamos la prueba Chi-cuadrado.
 
 ```{r prueba_chi-cuadrado}
 
@@ -762,12 +792,13 @@ chisq.test(x = tabla_prueba, p = 0.05, correct = FALSE, simulate.p.value = FALSE
 
 ```
 
-Con el conocimiento de cada uno de los parámetros, se procede a realizar las pruebas para las tablas de contingencias creadas anteriormente
+La siguiente prueba permite responder de manera completa a la pregunta de investigación, esto ya que la prueba chi-cuadrado permite determinar si 2 variables contienen, o no, una dependencia entre ellas. Además, la prueba permite observar el p-valor, el cual asume que la hipótesis nula es cierta, luego, anjunta la probabilidad de que esta sea realmente verdadera, lo cual se puede comparar con un cuantil de la distribución chi-cuadrado.
 
-```{r Pruebas_independencia}
+Con el conocimiento de cada uno de los parámetros, se procede a realizar las pruebas para las tablas de contingencias creadas anteriormente. Se inicia con la división de 17 grupos realizada por el INEC.
 
-# Se inicia con las tablas con valores absolutos
+```{r Pruebas_independencia_INEC}
 
+# Se inicia con las tablas con valores de grupo de muerte del INEC
 chisq.test(x = tabla_1, correct = TRUE)
 
 chisq.test(x = tabla_2, correct = TRUE)
@@ -778,17 +809,22 @@ chisq.test(x = tabla_4, correct = TRUE)
 
 chisq.test(x = tabla_5, correct = TRUE)
 
-# Luego, se procede con las tablas que tienen porcentajes
+```
 
-chisq.test(x = tabla_1_prop, correct = TRUE)
+Luego, se procede con la división de 4 grupos de enfermedades realizada por los integrantes del grupo.
 
-chisq.test(x = tabla_2_prop, correct = TRUE)
+```{r Pruebas_independencia_grp}
 
-chisq.test(x = tabla_3_prop, correct = TRUE)
+# Se continúa con los valores del grupo de muerte elaborado por el grupo de trabajo
+chisq.test(x = tabla_1_mod, correct = TRUE)
 
-chisq.test(x = tabla_4_prop, correct = TRUE)
+chisq.test(x = tabla_2_mod, correct = TRUE)
 
-chisq.test(x = tabla_5_prop, correct = TRUE)
+chisq.test(x = tabla_3_mod, correct = TRUE)
+
+chisq.test(x = tabla_4_mod, correct = TRUE)
+
+chisq.test(x = tabla_5_mod, correct = TRUE)
 
 ```
 
