@@ -161,7 +161,7 @@ muertes_cr$ocuparec <- gsub("Privado de libertad", "Otros", muertes_cr$ocuparec)
 
 ```
 
-Posteriormente, se procede a realizr una columna con una nueva división de los grupos de muerte, esta para proporcionar una comparación con los grupos de muerte realizados por el INEC, además, de esta manera se asegura que los grupos tengan suficientes personas para la prueba de independencia. Los nuevos grupos, basados en los del INEC, son los siguientes:
+Posteriormente, se procede a realizar una columna con una nueva división de los grupos de muerte, esta para proporcionar una comparación con los grupos de muerte realizados por el INEC, además, de esta manera se asegura que los grupos tengan suficientes personas para la prueba de independencia. Los nuevos grupos, basados en los del INEC, son los siguientes:
 
 Enfermedades infecciosas y parasitarias (1): Ciertas enfermedades infecciosas y parasitarias $1$.
 
@@ -174,6 +174,9 @@ Trastornos mentales y del comportamiento (4): Trastornos mentales y del comporta
 Condiciones especiales y anomalías (5): Complicaciones del embarazo, del parto y del puerperio $11$, enfermedades de la piel y del tejido celular subcutaneo $12$, malformaciones congénitas, deformidades y anomalías cromosómicas $14$, ciertas afecciones originadas en el periodo perinatal $15$, signos, síntomas y hallazgos anormales clínicos y de laboratorio no clasificados en otra parte $16$ y Causas externas de morbilidad y mortalidad $17$.
 
 ```{r Nueva_col}
+
+library(dplyr)
+
 # Se agregan todos los casos a considerar
 muertes_cr <- muertes_cr %>%
   mutate(grp_muerte = case_when(
@@ -185,6 +188,7 @@ muertes_cr <- muertes_cr %>%
   ))
 
 muertes_cr$grp_muerte <- as.numeric(muertes_cr$grp_muerte)
+
 ```
 
 ## Análisis descriptivo
@@ -590,8 +594,6 @@ Seguidamente, se realizarán gráficos de mapa de calor entre las variables impo
 
 library(ggplot2)
 
-library(dplyr)
-
 # Relaciones entre la nacionalidad y las demás variables
 
 muertes_cr |> 
@@ -798,33 +800,53 @@ Con el conocimiento de cada uno de los parámetros, se procede a realizar las pr
 
 ```{r Pruebas_independencia_INEC}
 
+lista_stad <- list()
+
 # Se inicia con las tablas con valores de grupo de muerte del INEC
-chisq.test(x = tabla_1, correct = TRUE)
+lista_stad[[1]] <- chisq.test(x = tabla_1, correct = TRUE)
 
-chisq.test(x = tabla_2, correct = TRUE)
+lista_stad[[2]] <- chisq.test(x = tabla_2, correct = TRUE)
 
-chisq.test(x = tabla_3, correct = TRUE)
+lista_stad[[3]] <- chisq.test(x = tabla_3, correct = TRUE)
 
-chisq.test(x = tabla_4, correct = TRUE)
+lista_stad[[4]] <- chisq.test(x = tabla_4, correct = TRUE)
 
-chisq.test(x = tabla_5, correct = TRUE)
+lista_stad[[5]] <- chisq.test(x = tabla_5, correct = TRUE)
 
 ```
 
-Luego, se procede con la división de 4 grupos de enfermedades realizada por los integrantes del grupo.
+Luego, se procede con la división de 5 grupos de enfermedades realizada por los integrantes del grupo.
 
 ```{r Pruebas_independencia_grp}
 
 # Se continúa con los valores del grupo de muerte elaborado por el grupo de trabajo
-chisq.test(x = tabla_1_mod, correct = TRUE)
+lista_stad[[6]] <- chisq.test(x = tabla_1_mod, correct = TRUE)
 
-chisq.test(x = tabla_2_mod, correct = TRUE)
+lista_stad[[7]] <- chisq.test(x = tabla_2_mod, correct = TRUE)
 
-chisq.test(x = tabla_3_mod, correct = TRUE)
+lista_stad[[8]] <- chisq.test(x = tabla_3_mod, correct = TRUE)
 
-chisq.test(x = tabla_4_mod, correct = TRUE)
+lista_stad[[9]] <- chisq.test(x = tabla_4_mod, correct = TRUE)
 
-chisq.test(x = tabla_5_mod, correct = TRUE)
+lista_stad[[10]] <- chisq.test(x = tabla_5_mod, correct = TRUE)
 
 ```
 
+En este punto, compararemos los resultados de la prueba chi-cuadrado con su respectivo cuantíl, para determinar el resultado de esta prueba de hipótesis. Se usará un nivel de significancia del $90%$.
+
+```{r Resultados}
+
+# Se comparan los resultados con el cuantíl correspondiente, si es falso se rechaza la hipótesis nula
+for (i in c(1:length(lista_stad))) {
+  print(lista_stad[[i]]$statistic < qchisq(p = 0.90, df = lista_stad[[i]]$parameter))
+}
+
+```
+
+Ya que rechazamos la hipótesis nula en todos los casos, veremos el p-valor para complementar esta información.
+
+```{r p-valores}
+for (i in c(1:length(lista_stad))) {
+  print(lista_stad[[i]]$p.value)
+}
+```
