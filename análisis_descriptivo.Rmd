@@ -50,31 +50,31 @@ Se procede a corregir los errores ortográficos de las principales variables
 ```{r Ortografia}
 
 # Se pondrá todo sin tílde, para evitar errores al correr el código
-muertes.df$ocuparec <- chartr("Ã", "i", muertes.df$ocuparec)
-muertes.df$regsalud <- chartr("Ã", "i", muertes.df$regsalud)
-muertes.df$reginec <- chartr("Ã", "i", muertes.df$reginec)
-muertes.df$autopsia <- chartr("Ã", "i", muertes.df$autopsia)
-muertes.df$asistmed <- chartr("Ã", "i", muertes.df$asistmed)
+muertes_cr$ocuparec <- chartr("Ã", "i", muertes_cr$ocuparec)
+muertes_cr$regsalud <- chartr("Ã", "i", muertes_cr$regsalud)
+muertes_cr$reginec <- chartr("Ã", "i", muertes_cr$reginec)
+muertes_cr$autopsia <- chartr("Ã", "i", muertes_cr$autopsia)
+muertes_cr$asistmed <- chartr("Ã", "i", muertes_cr$asistmed)
 
-muertes.df$estcivil <- gsub("Ã³", "o", muertes.df$estcivil)
-muertes.df$ocuparec <- gsub("Ã¡", "a", muertes.df$ocuparec)
-muertes.df$ocuparec <- gsub("Ã©", "e", muertes.df$ocuparec)
-muertes.df$regsalud <- gsub("i³", "o", muertes.df$regsalud)
-muertes.df$provincia <- gsub("Ã©", "e", muertes.df$provincia)
-muertes.df$provincia <- gsub("Ã³", "o", muertes.df$provincia)
-muertes.df$provocu <- gsub("Ã©", "e", muertes.df$provocu)
-muertes.df$provocu <- gsub("Ã³", "o", muertes.df$provocu)
-muertes.df$provregis <- gsub("Ã©", "e", muertes.df$provregis)
-muertes.df$provregis <- gsub("Ã³", "o", muertes.df$provregis)
-muertes.df$reginec <- gsub("i³", "o", muertes.df$reginec)
-muertes.df$edadsrec <-
-  gsub("100 y mÃ¡s", "100 - 121", muertes.df$edadsrec)
-muertes.df$autopsia <- gsub("Ã©", "e", muertes.df$autopsia)
-muertes.df$asistmed <- gsub("Ã©", "e", muertes.df$asistmed)
-muertes.df$reginec <-
-  gsub("Paci­fico", "Pacifico", muertes.df$reginec)
-muertes.df$regsalud <-
-  gsub("Paci­fico", "Pacifico", muertes.df$regsalud)
+muertes_cr$estcivil <- gsub("Ã³", "o", muertes_cr$estcivil)
+muertes_cr$ocuparec <- gsub("Ã¡", "a", muertes_cr$ocuparec)
+muertes_cr$ocuparec <- gsub("Ã©", "e", muertes_cr$ocuparec)
+muertes_cr$regsalud <- gsub("i³", "o", muertes_cr$regsalud)
+muertes_cr$provincia <- gsub("Ã©", "e", muertes_cr$provincia)
+muertes_cr$provincia <- gsub("Ã³", "o", muertes_cr$provincia)
+muertes_cr$provocu <- gsub("Ã©", "e", muertes_cr$provocu)
+muertes_cr$provocu <- gsub("Ã³", "o", muertes_cr$provocu)
+muertes_cr$provregis <- gsub("Ã©", "e", muertes_cr$provregis)
+muertes_cr$provregis <- gsub("Ã³", "o", muertes_cr$provregis)
+muertes_cr$reginec <- gsub("i³", "o", muertes_cr$reginec)
+muertes_cr$edadsrec <-
+  gsub("100 y mÃ¡s", "100 - 121", muertes_cr$edadsrec)
+muertes_cr$autopsia <- gsub("Ã©", "e", muertes_cr$autopsia)
+muertes_cr$asistmed <- gsub("Ã©", "e", muertes_cr$asistmed)
+muertes_cr$reginec <-
+  gsub("Paci­fico", "Pacifico", muertes_cr$reginec)
+muertes_cr$regsalud <-
+  gsub("Paci­fico", "Pacifico", muertes_cr$regsalud)
 
 ```
 
@@ -741,9 +741,18 @@ lista_stad[[10]] <- chisq.test(x = tabla_5_mod, correct = TRUE)
 
 ## Resultados
 
+A continuación se muestran los resultados generales de cada una de las pruebas anteriores.
+
+```{r Resultados_chi-cuadrado}
+for (i in c(1:length(lista_stad))) {
+  print(lista_stad[i])
+}
+```
+
+
 En este punto, compararemos los resultados de la prueba chi-cuadrado con su respectivo cuantíl, para determinar el resultado de esta prueba de hipótesis. Se usará un nivel de significancia del $90%$.
 
-```{r Resultados}
+```{r Resultados_indep}
 
 # Se comparan los resultados con el cuantíl correspondiente, si es falso se rechaza la hipótesis nula
 for (i in c(1:length(lista_stad))) {
