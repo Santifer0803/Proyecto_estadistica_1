@@ -67,14 +67,13 @@ muertes_cr$provocu <- gsub("Ã³", "o", muertes_cr$provocu)
 muertes_cr$provregis <- gsub("Ã©", "e", muertes_cr$provregis)
 muertes_cr$provregis <- gsub("Ã³", "o", muertes_cr$provregis)
 muertes_cr$reginec <- gsub("i³", "o", muertes_cr$reginec)
-muertes_cr$edadsrec <-
-  gsub("100 y mÃ¡s", "100 - 121", muertes_cr$edadsrec)
+muertes_cr$edadsrec <- gsub("100 y mÃ¡s", "100 - 121", muertes_cr$edadsrec)
 muertes_cr$autopsia <- gsub("Ã©", "e", muertes_cr$autopsia)
 muertes_cr$asistmed <- gsub("Ã©", "e", muertes_cr$asistmed)
-muertes_cr$reginec <-
-  gsub("Paci­fico", "Pacifico", muertes_cr$reginec)
-muertes_cr$regsalud <-
-  gsub("Paci­fico", "Pacifico", muertes_cr$regsalud)
+muertes_cr$reginec <- gsub("Paci­fico", "Pacifico", muertes_cr$reginec)
+muertes_cr$regsalud <- gsub("Paci­fico", "Pacifico", muertes_cr$regsalud)
+muertes_cr$ocuparec <- gsub("i¡", "a", muertes_cr$ocuparec)
+muertes_cr$ocuparec <- gsub("i©", "e", muertes_cr$ocuparec)
 
 ```
 
