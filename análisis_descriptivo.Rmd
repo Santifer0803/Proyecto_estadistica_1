@@ -146,15 +146,15 @@ muertes_cr$ocuparec <- gsub("Privado de libertad", "Otros", muertes_cr$ocuparec)
 
 Posteriormente, se procede a realizar una columna con una nueva división de los grupos de muerte, esta para proporcionar una comparación con los grupos de muerte realizados por el INEC, además, de esta manera se asegura que los grupos tengan suficientes personas para la prueba de independencia. Los nuevos grupos, basados en los del INEC, son los siguientes:
 
-Enfermedades infecciosas y parasitarias (1): Ciertas enfermedades infecciosas y parasitarias $1$.
+Enfermedades infecciosas, parasitarias, trastornos metabólicos y nutricionales (1): Ciertas enfermedades infecciosas y parasitarias $1$, enfermedades endocrinas, nutricionales y metabólicas $3$, enfermedades de la sangre y de los órganos hematopoyéticos, ciertos trastornos que afectan al mecanismo de la inmunidad $4$.
 
-Enfermedades crónicas y degenerativas (2): Tumores (neoplastias) $2$, enfermedades en el sistema circulatorio $7$, enfermedades del sistema respiratorio $8$, enfermedades del sistema digestivo $9$, enfermedades del sistema genitourinario $10$ y enfermedades del sistema osteomuscular y del tejido conjuntivo $13$.
+Enfermedades crónicas y degenerativas (2): Enfermedades del sistema respiratorio $8$, enfermedades del sistema digestivo $9$, enfermedades del sistema genitourinario $10$ y enfermedades del sistema osteomuscular y del tejido conjuntivo $13$.
 
-Trastornos metabólicos y nutricionales (3): Enfermedades endocrinas, nutricionales y metabólicas $3$, enfermedades de la sangre y de los órganos hematopoyéticos, ciertos trastornos que afectan al mecanismo de la inmunidad $4$.
+Enfermedades del sistema circulatorio (3): enfermedades en el sistema circulatorio $7$.
 
-Trastornos mentales y del comportamiento (4): Trastornos mentales y del comportamiento $5$, enfermedades del sistema nervioso y de los órganos de los sentidos del ojo y sus anexos, del oído y de la apófisis mastoides $6$.
+Tumores (neoplastias) (4): Tumores (neoplastias) $2$.
 
-Condiciones especiales y anomalías (5): Complicaciones del embarazo, del parto y del puerperio $11$, enfermedades de la piel y del tejido celular subcutaneo $12$, malformaciones congénitas, deformidades y anomalías cromosómicas $14$, ciertas afecciones originadas en el periodo perinatal $15$, signos, síntomas y hallazgos anormales clínicos y de laboratorio no clasificados en otra parte $16$ y Causas externas de morbilidad y mortalidad $17$.
+Trastornos mentales, del comportamiento y otros (5): Trastornos mentales y del comportamiento $5$, enfermedades del sistema nervioso y de los órganos de los sentidos del ojo y sus anexos, del oído y de la apófisis mastoides $6$, complicaciones del embarazo, del parto y del puerperio $11$, enfermedades de la piel y del tejido celular subcutaneo $12$, malformaciones congénitas, deformidades y anomalías cromosómicas $14$, ciertas afecciones originadas en el periodo perinatal $15$, signos, síntomas y hallazgos anormales clínicos y de laboratorio no clasificados en otra parte $16$ y Causas externas de morbilidad y mortalidad $17$.
 
 ```{r Nueva_col}
 
@@ -163,11 +163,11 @@ library(dplyr)
 # Se agregan todos los casos a considerar
 muertes_cr <- muertes_cr %>%
   mutate(grp_muerte = case_when(
-    grgruposcb %in% c(1) ~ 1,
-    grgruposcb %in% c(2, 7, 8, 9, 10, 13) ~ 2,
-    grgruposcb %in% c(3, 4) ~ 3,
-    grgruposcb %in% c(5, 6) ~ 4,
-    grgruposcb %in% c(11, 12, 14, 15, 16, 17) ~ 5
+    grgruposcb %in% c(1, 3, 4) ~ 1,
+    grgruposcb %in% c(8, 9, 10, 13) ~ 2,
+    grgruposcb %in% c(7) ~ 3,
+    grgruposcb %in% c(2) ~ 4,
+    grgruposcb %in% c(5, 6, 11, 12, 14, 15, 16, 17) ~ 5
   ))
 
 muertes_cr$grp_muerte <- as.numeric(muertes_cr$grp_muerte)
