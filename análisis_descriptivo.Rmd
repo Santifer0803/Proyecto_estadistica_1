@@ -69,7 +69,11 @@ muertes_cr$provregis <- gsub("Ã³", "o", muertes_cr$provregis)
 muertes_cr$reginec <- gsub("i³", "o", muertes_cr$reginec)
 muertes_cr$edadsrec <- gsub("100 y mÃ¡s", "100 - 121", muertes_cr$edadsrec)
 muertes_cr$autopsia <- gsub("Ã©", "e", muertes_cr$autopsia)
+muertes_cr$autopsia <- gsub("i©", "e", muertes_cr$autopsia)
+muertes_cr$autopsia <- gsub("Si­", "Si", muertes_cr$autopsia)
 muertes_cr$asistmed <- gsub("Ã©", "e", muertes_cr$asistmed)
+muertes_cr$asistmed <- gsub("i©", "e", muertes_cr$asistmed)
+muertes_cr$asistmed <- gsub("Si­", "Si", muertes_cr$asistmed)
 muertes_cr$reginec <- gsub("Paci­fico", "Pacifico", muertes_cr$reginec)
 muertes_cr$regsalud <- gsub("Paci­fico", "Pacifico", muertes_cr$regsalud)
 muertes_cr$ocuparec <- gsub("i¡", "a", muertes_cr$ocuparec)
@@ -88,7 +92,8 @@ Hay muchas nacionalidades en la base de datos, pero la mayoría son de Costa Ric
 muertes_cr$nacionalid <- gsub("^(?!Costa Rica$).*", "Extranjero", muertes_cr$nacionalid, perl = TRUE)
 
 ```
-Debido a la baja cantidad de observaciones, en el estado civil se hará un grupo llamado "otros" para los que están en estado civil: ignorado, unión libre, menor y separado
+
+Debido a la baja cantidad de observaciones, en el estado civil se hará un grupo llamado "Otros" para los que están en estado civil: ignorado, unión libre, menor y separado
 
 ```{r Estado_civil}
 
@@ -185,21 +190,20 @@ muertes_cr$edadsrec <- factor(muertes_cr$edadsrec, levels = c("15 - 19", "20 - 2
 
 ```
 
-
 Se resumirán algunas de las variables de la base de datos con visualizaciones
 
-```{r Visualizaciones_descriptivas}
+```{r, message = FALSE, warning = FALSE, Visualizaciones_descriptivas}
 
 library(ggplot2)
 
 ggplot(muertes_cr, aes(x = anotrab)) +
     geom_histogram(binwidth = 1, fill = "blue", color = "black") +
-    labs(x = "Año de trabajo", y = "Cantidad", caption = "Fuente: elaboración propia") +
+    labs(x = "Año", y = "Cantidad", caption = "Fuente: elaboración propia") +
     theme_minimal()
 
 ggplot(muertes_cr, aes(x = mestrab)) +
   geom_bar(fill = "skyblue") +
-  labs(x = "Meses", y = "Frecuencia", caption = "Fuente: elaboración propia") +
+  labs(x = "Mes", y = "Frecuencia", caption = "Fuente: elaboración propia") +
   theme_minimal() +
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
 
@@ -211,30 +215,30 @@ ggplot(muertes_cr, aes(x = nacionalid)) +
 
 ggplot(muertes_cr, aes(x = sexo)) +
   geom_bar(fill = "coral") +
-  labs(x = "Sexos", y = "Frecuencia", caption = "Fuente: elaboración propia") +
+  labs(x = "Sexo", y = "Frecuencia", caption = "Fuente: elaboración propia") +
   theme_minimal() +
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
 
 ggplot(muertes_cr, aes(x = estcivil)) +
   geom_bar(fill = "purple") +
-  labs(x = "Est. Civil", y = "Frecuencia", caption = "Fuente: elaboración propia") +
+  labs(x = "Estado Civil", y = "Frecuencia", caption = "Fuente: elaboración propia") +
   theme_minimal() +
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
 
 ggplot(muertes_cr, aes(x = edads)) +
     geom_histogram(binwidth = 1, fill = "bisque3", color = "black") +
-    labs(x = "Edades", y = "Cantidad", caption = "Fuente: elaboración propia") +
+    labs(x = "Edad", y = "Cantidad", caption = "Fuente: elaboración propia") +
     theme_minimal()
 
 ggplot(muertes_cr, aes(x = edadsrec)) +
   geom_bar(fill = "green3") +
-  labs(x = "R. etarios", y = "Frecuencia", caption = "Fuente: elaboración propia") +
+  labs(x = "Rango etario", y = "Frecuencia", caption = "Fuente: elaboración propia") +
   theme_minimal() +
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
 
 ggplot(muertes_cr, aes(x = provincia)) +
   geom_bar(fill = "cornflowerblue") +
-  labs(x = "Provincias", y = "Frecuencia", caption = "Fuente: elaboración propia") +
+  labs(x = "Provincia", y = "Frecuencia", caption = "Fuente: elaboración propia") +
   theme_minimal() +
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
 
@@ -245,13 +249,13 @@ ggplot(muertes_cr, aes(x = IU)) +
 
 ggplot(muertes_cr, aes(x = autopsia)) +
   geom_bar(fill = "darkolivegreen") +
-  labs(x = "Autopsias", y = "Frecuencia", caption = "Fuente: elaboración propia") +
+  labs(x = "Autopsia", y = "Frecuencia", caption = "Fuente: elaboración propia") +
   theme_minimal() +
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
 
 ggplot(muertes_cr, aes(x = asistmed)) +
   geom_bar(fill = "darkolivegreen4") +
-  labs(x = "Asistencia medica", y = "Frecuencia", caption = "Fuente: elaboración propia") +
+  labs(x = "Asistencia médica", y = "Frecuencia", caption = "Fuente: elaboración propia") +
   theme_minimal() +
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
 
@@ -743,9 +747,13 @@ lista_stad[[10]] <- chisq.test(x = tabla_5_mod, correct = TRUE)
 A continuación se muestran los resultados generales de cada una de las pruebas anteriores.
 
 ```{r Resultados_chi-cuadrado}
+
 for (i in c(1:length(lista_stad))) {
+  
   print(lista_stad[i])
+  
 }
+
 ```
 
 
@@ -755,7 +763,9 @@ En este punto, compararemos los resultados de la prueba chi-cuadrado con su resp
 
 # Se comparan los resultados con el cuantíl correspondiente, si es falso se rechaza la hipótesis nula
 for (i in c(1:length(lista_stad))) {
+  
   print(lista_stad[[i]]$statistic < qchisq(p = 0.90, df = lista_stad[[i]]$parameter))
+  
 }
 
 ```
@@ -763,7 +773,17 @@ for (i in c(1:length(lista_stad))) {
 Ya que rechazamos la hipótesis nula en todos los casos, veremos el p-valor para complementar esta información.
 
 ```{r p-valores}
+
 for (i in c(1:length(lista_stad))) {
+  
   print(lista_stad[[i]]$p.value)
+  
 }
+
 ```
+
+
+
+
+
+
