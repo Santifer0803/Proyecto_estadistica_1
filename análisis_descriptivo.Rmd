@@ -757,7 +757,7 @@ for (i in c(1:length(lista_stad))) {
 ```
 
 
-En este punto, compararemos los resultados de la prueba chi-cuadrado con su respectivo cuantíl, para determinar el resultado de esta prueba de hipótesis. Se usará un nivel de significancia del $90%$.
+En este punto, compararemos los resultados de la prueba chi-cuadrado con su respectivo cuantíl, para determinar el resultado de esta prueba de hipótesis. Se usará un nivel de significancia del $10\%$.
 
 ```{r Resultados_indep}
 
