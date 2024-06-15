@@ -50,12 +50,6 @@ Se procede a corregir los errores ortográficos de las principales variables
 ```{r Ortografia}
 
 # Se pondrá todo sin tílde, para evitar errores al correr el código
-muertes_cr$ocuparec <- chartr("Ã", "i", muertes_cr$ocuparec)
-muertes_cr$regsalud <- chartr("Ã", "i", muertes_cr$regsalud)
-muertes_cr$reginec <- chartr("Ã", "i", muertes_cr$reginec)
-muertes_cr$autopsia <- chartr("Ã", "i", muertes_cr$autopsia)
-muertes_cr$asistmed <- chartr("Ã", "i", muertes_cr$asistmed)
-
 muertes_cr$estcivil <- gsub("Ã³", "o", muertes_cr$estcivil)
 muertes_cr$ocuparec <- gsub("Ã¡", "a", muertes_cr$ocuparec)
 muertes_cr$ocuparec <- gsub("Ã©", "e", muertes_cr$ocuparec)
@@ -78,6 +72,22 @@ muertes_cr$reginec <- gsub("Paci­fico", "Pacifico", muertes_cr$reginec)
 muertes_cr$regsalud <- gsub("Paci­fico", "Pacifico", muertes_cr$regsalud)
 muertes_cr$ocuparec <- gsub("i¡", "a", muertes_cr$ocuparec)
 muertes_cr$ocuparec <- gsub("i©", "e", muertes_cr$ocuparec)
+muertes_cr$pc <- gsub("Ã©", "e", muertes_cr$pc)
+muertes_cr$pc <- gsub("Ãº", "u", muertes_cr$pc)
+muertes_cr$pc <- gsub("Ã¡", "a", muertes_cr$pc)
+muertes_cr$pc <- gsub("Ã³", "o", muertes_cr$pc)
+muertes_cr$pcregis <- gsub("Ã©", "e", muertes_cr$pcregis)
+muertes_cr$pcregis <- gsub("Ãº", "u", muertes_cr$pcregis)
+muertes_cr$pcregis <- gsub("Ã¡", "a", muertes_cr$pcregis)
+muertes_cr$pcregis <- gsub("Ã³", "o", muertes_cr$pcregis)
+
+muertes_cr$ocuparec <- chartr("Ã", "i", muertes_cr$ocuparec)
+muertes_cr$regsalud <- chartr("Ã", "i", muertes_cr$regsalud)
+muertes_cr$reginec <- chartr("Ã", "i", muertes_cr$reginec)
+muertes_cr$autopsia <- chartr("Ã", "i", muertes_cr$autopsia)
+muertes_cr$asistmed <- chartr("Ã", "i", muertes_cr$asistmed)
+muertes_cr$pc <- chartr("Ã", "i", muertes_cr$pc)
+muertes_cr$pcregis <- chartr("Ã", "i", muertes_cr$pcregis)
 
 ```
 
@@ -177,6 +187,19 @@ muertes_cr <- muertes_cr %>%
 muertes_cr$grp_muerte <- as.numeric(muertes_cr$grp_muerte)
 
 ```
+
+Se eliminarán las columnas que no se usan para el análisis.
+
+```{r Eliminar_col}
+
+# Eliminación de columnas
+  muertes_cr <- muertes_cr %>%
+    select(-nacmadre,
+           -instmurio,
+           -gruposcb)
+
+```
+
 
 ## Análisis descriptivo
 
@@ -667,38 +690,24 @@ Se proceden a realizar cuadros que resumen la información de las variables más
 
 ```{r Tablas_contingencias}
 
-# Grupo de muerte del INEC
 library(knitr)
-tabla_1 <- table(muertes_cr$grgruposcb, muertes_cr$regsalud)
-kable(tabla_1, caption = "")
-
-tabla_2 <- table(muertes_cr$grgruposcb, muertes_cr$nacionalid)
-kable(tabla_2, caption = "")
-
-tabla_3 <- table(muertes_cr$grgruposcb, muertes_cr$sexo)
-kable(tabla_3, caption = "")
-
-tabla_4 <- table(muertes_cr$grgruposcb, muertes_cr$estcivil)
-kable(tabla_4, caption = "")
-
-tabla_5 <- table(muertes_cr$grgruposcb, muertes_cr$ocuparec)
-kable(tabla_5, caption = "")
 
 # Grupo de muerte elaborado por grupo
-tabla_1_mod <- table(muertes_cr$grp_muerte, muertes_cr$regsalud)
-kable(tabla_1_mod, caption = "")
+tabla_1 <- table(muertes_cr$grp_muerte, muertes_cr$regsalud)
 
-tabla_2_mod <- table(muertes_cr$grp_muerte, muertes_cr$nacionalid)
-kable(tabla_2_mod, caption = "")
+tabla_2 <- table(muertes_cr$grp_muerte, muertes_cr$nacionalid)
 
-tabla_3_mod <- table(muertes_cr$grp_muerte, muertes_cr$sexo)
-kable(tabla_3_mod, caption = "")
+tabla_3 <- table(muertes_cr$grp_muerte, muertes_cr$sexo)
 
-tabla_4_mod <- table(muertes_cr$grp_muerte, muertes_cr$estcivil)
-kable(tabla_4_mod, caption = "")
+tabla_4 <- table(muertes_cr$grp_muerte, muertes_cr$estcivil)
 
-tabla_5_mod <- table(muertes_cr$grp_muerte, muertes_cr$ocuparec)
-kable(tabla_5_mod, caption = "")
+tabla_5 <- table(muertes_cr$grp_muerte, muertes_cr$ocuparec)
+
+tabla_6 <- table(muertes_cr$grp_muerte, muertes_cr$edadsrec)
+
+tabla_7 <- table(muertes_cr$grp_muerte, muertes_cr$pc)
+
+tabla_8 <- table(muertes_cr$grp_muerte, muertes_cr$pcregis)
 
 ```
 
@@ -706,13 +715,12 @@ kable(tabla_5_mod, caption = "")
 
 La siguiente prueba permite responder de manera completa a la pregunta de investigación, esto ya que la prueba chi-cuadrado permite determinar si 2 variables contienen, o no, una dependencia entre ellas. Además, la prueba permite observar el p-valor, el cual asume que la hipótesis nula es cierta, luego, anjunta la probabilidad de que esta sea realmente verdadera, lo cual se puede comparar con un cuantil de la distribución chi-cuadrado.
 
-Con el conocimiento de cada uno de los parámetros, se procede a realizar las pruebas para las tablas de contingencias creadas anteriormente. Se inicia con la división de 17 grupos realizada por el INEC.
+Se procede con la división de 5 grupos de enfermedades realizada por los integrantes del grupo.
 
-```{r Pruebas_independencia_INEC}
-
+```{r Pruebas_independencia_grp}
 lista_stad <- list()
 
-# Se inicia con las tablas con valores de grupo de muerte del INEC
+# Se continúa con los valores del grupo de muerte elaborado por el grupo de trabajo
 lista_stad[[1]] <- chisq.test(x = tabla_1, correct = TRUE)
 
 lista_stad[[2]] <- chisq.test(x = tabla_2, correct = TRUE)
@@ -723,22 +731,11 @@ lista_stad[[4]] <- chisq.test(x = tabla_4, correct = TRUE)
 
 lista_stad[[5]] <- chisq.test(x = tabla_5, correct = TRUE)
 
-```
+lista_stad[[6]] <- chisq.test(x = tabla_6, correct = TRUE)
 
-Luego, se procede con la división de 5 grupos de enfermedades realizada por los integrantes del grupo.
+lista_stad[[7]] <- chisq.test(x = tabla_7, correct = TRUE)
 
-```{r Pruebas_independencia_grp}
-
-# Se continúa con los valores del grupo de muerte elaborado por el grupo de trabajo
-lista_stad[[6]] <- chisq.test(x = tabla_1_mod, correct = TRUE)
-
-lista_stad[[7]] <- chisq.test(x = tabla_2_mod, correct = TRUE)
-
-lista_stad[[8]] <- chisq.test(x = tabla_3_mod, correct = TRUE)
-
-lista_stad[[9]] <- chisq.test(x = tabla_4_mod, correct = TRUE)
-
-lista_stad[[10]] <- chisq.test(x = tabla_5_mod, correct = TRUE)
+lista_stad[[8]] <- chisq.test(x = tabla_8, correct = TRUE)
 
 ```
 
