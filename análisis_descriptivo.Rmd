@@ -707,7 +707,7 @@ tabla_6 <- table(muertes_cr$grp_muerte, muertes_cr$edadsrec)
 
 tabla_7 <- table(muertes_cr$grp_muerte, muertes_cr$pc)
 
-tabla_8 <- table(muertes_cr$grp_muerte, muertes_cr$pcregis)
+tabla_8 <- table(muertes_cr$grp_muerte, muertes_cr$pcocu)
 
 ```
 
