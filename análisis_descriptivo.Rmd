@@ -89,10 +89,10 @@ muertes_cr$pcregis <- gsub("Ã©", "e", muertes_cr$pcregis)
 muertes_cr$pcregis <- gsub("Ãº", "u", muertes_cr$pcregis)
 muertes_cr$pcregis <- gsub("Ã¡", "a", muertes_cr$pcregis)
 muertes_cr$pcregis <- gsub("Ã³", "o", muertes_cr$pcregis)
+muertes_cr$reginec <- gsub("Ã³", "o", muertes_cr$reginec)
+muertes_cr$regsalud <- gsub("Ã³", "o", muertes_cr$regsalud)
 
 muertes_cr$ocuparec <- chartr("Ã", "i", muertes_cr$ocuparec)
-muertes_cr$regsalud <- chartr("Ã", "i", muertes_cr$regsalud)
-muertes_cr$reginec <- chartr("Ã", "i", muertes_cr$reginec)
 muertes_cr$autopsia <- chartr("Ã", "i", muertes_cr$autopsia)
 muertes_cr$asistmed <- chartr("Ã", "i", muertes_cr$asistmed)
 muertes_cr$pc <- chartr("Ã", "i", muertes_cr$pc)
@@ -772,6 +772,3 @@ for (i in 1:length(lista_tablas)) {
   print(cramerV(lista_tablas[[i]]))
 }
 ```
-
-
-
