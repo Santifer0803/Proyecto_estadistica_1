@@ -11,11 +11,20 @@ knitr::opts_chunk$set(warning = FALSE, message = FALSE)
 
 ```
 
-# Bitácora 2
-
 ## Limpieza de la base
 
-Se inicia descargando la base
+Se inicia cargando las librerías iniciales.
+
+```{r Librerías}
+pacman::p_load(readxl,
+               dplyr,
+               ggplot2,
+               cowplot,
+               rcompanion,
+               knitr)
+```
+
+Posteriormente se descarga la base
 
 ```{r Descarga_base}
 
@@ -172,8 +181,6 @@ Trastornos mentales, del comportamiento y otros (5): Trastornos mentales y del c
 
 ```{r Nueva_col}
 
-library(dplyr)
-
 # Se agregan todos los casos a considerar
 muertes_cr <- muertes_cr %>%
   mutate(grp_muerte = case_when(
@@ -216,8 +223,6 @@ muertes_cr$edadsrec <- factor(muertes_cr$edadsrec, levels = c("15 - 19", "20 - 2
 Se resumirán algunas de las variables de la base de datos con visualizaciones
 
 ```{r, message = FALSE, warning = FALSE, Visualizaciones_descriptivas}
-
-library(ggplot2)
 
 ggplot(muertes_cr, aes(x = anotrab)) +
     geom_histogram(binwidth = 1, fill = "blue", color = "black") +
@@ -405,8 +410,6 @@ Finalmente representamos lo anterior con un gráfico
 
 ```{r Grafico}
 
-library(ggplot2)
-
 ggplot(data = df_1000, aes(x = annos_def, y = muertes)) +
   geom_line(color = "chartreuse3") +
   geom_point(color = "chartreuse4", size = 3) +
@@ -422,10 +425,6 @@ ggplot(data = df_1000, aes(x = annos_def, y = muertes)) +
 Primero se realizan histogramas relacionando los grupos de causa de muerte (eje x) y la densidad (eje y) de las diferentes subcategorías de las variables importantes
 
 ```{r Relaciones_histogramas}
-
-library(ggplot2)
-
-library(cowplot)
 
 categorias <- length(unique(muertes_cr$nacionalid))
 
@@ -689,25 +688,24 @@ muertes_cr |>
 Se proceden a realizar cuadros que resumen la información de las variables más relevantes de la base de datos
 
 ```{r Tablas_contingencias}
-
-library(knitr)
+lista_tablas <- list()
 
 # Grupo de muerte elaborado por grupo
-tabla_1 <- table(muertes_cr$grp_muerte, muertes_cr$regsalud)
+lista_tablas[[1]] <- table(muertes_cr$grp_muerte, muertes_cr$regsalud)
 
-tabla_2 <- table(muertes_cr$grp_muerte, muertes_cr$nacionalid)
+lista_tablas[[2]] <- table(muertes_cr$grp_muerte, muertes_cr$nacionalid)
 
-tabla_3 <- table(muertes_cr$grp_muerte, muertes_cr$sexo)
+lista_tablas[[3]] <- table(muertes_cr$grp_muerte, muertes_cr$sexo)
 
-tabla_4 <- table(muertes_cr$grp_muerte, muertes_cr$estcivil)
+lista_tablas[[4]] <- table(muertes_cr$grp_muerte, muertes_cr$estcivil)
 
-tabla_5 <- table(muertes_cr$grp_muerte, muertes_cr$ocuparec)
+lista_tablas[[5]] <- table(muertes_cr$grp_muerte, muertes_cr$ocuparec)
 
-tabla_6 <- table(muertes_cr$grp_muerte, muertes_cr$edadsrec)
+lista_tablas[[6]] <- table(muertes_cr$grp_muerte, muertes_cr$edadsrec)
 
-tabla_7 <- table(muertes_cr$grp_muerte, muertes_cr$pc)
+lista_tablas[[7]] <- table(muertes_cr$grp_muerte, muertes_cr$pc)
 
-tabla_8 <- table(muertes_cr$grp_muerte, muertes_cr$pcocu)
+lista_tablas[[8]] <- table(muertes_cr$grp_muerte, muertes_cr$pcocu)
 
 ```
 
@@ -721,22 +719,10 @@ Se procede con la división de 5 grupos de enfermedades realizada por los integr
 lista_stad <- list()
 
 # Se continúa con los valores del grupo de muerte elaborado por el grupo de trabajo
-lista_stad[[1]] <- chisq.test(x = tabla_1, correct = TRUE)
 
-lista_stad[[2]] <- chisq.test(x = tabla_2, correct = TRUE)
-
-lista_stad[[3]] <- chisq.test(x = tabla_3, correct = TRUE)
-
-lista_stad[[4]] <- chisq.test(x = tabla_4, correct = TRUE)
-
-lista_stad[[5]] <- chisq.test(x = tabla_5, correct = TRUE)
-
-lista_stad[[6]] <- chisq.test(x = tabla_6, correct = TRUE)
-
-lista_stad[[7]] <- chisq.test(x = tabla_7, correct = TRUE)
-
-lista_stad[[8]] <- chisq.test(x = tabla_8, correct = TRUE)
-
+for (i in 1:length(lista_tablas)) {
+  lista_stad[[i]] <- chisq.test(x = lista_tablas[[i]], correct = TRUE)
+}
 ```
 
 ## Resultados
@@ -779,8 +765,13 @@ for (i in c(1:length(lista_stad))) {
 
 ```
 
+Adicionalmente, se observa el valor de la V de Cramer para determinar el nivel de dependencia que existe entre las variables respectivas.
 
-
+```{r v_cramer}
+for (i in 1:length(lista_tablas)) {
+  print(cramerV(lista_tablas[[i]]))
+}
+```
 
 
 
